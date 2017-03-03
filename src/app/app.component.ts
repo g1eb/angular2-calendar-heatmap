@@ -3,12 +3,12 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'my-app',
   template: `
-    <child-component
+    <calendar-heatmap
       [someObject]="someObject"
       [someString]="someString"
       [someNumber]="someNumber"
       (onChange)="print($event)">
-    </child-component>
+    </calendar-heatmap>
   `,
 })
 

@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'child-component',
+  selector: 'calendar-heatmap',
   template: `
     <h1>Object: {{ someObject | json }}</h1>
     <h1>String: {{ someString }}</h1>
@@ -15,10 +15,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
       color: red;
     }
   `],
-  styleUrls:  ['./src/app/child.component.css'],
+  styleUrls:  ['./src/app/calendar-heatmap.css'],
 })
 
-export class ChildComponent  {
+export class CalendarHeatmap  {
   @Input() someObject: any;
   @Input() someString: string;
   @Input() someNumber: number;
