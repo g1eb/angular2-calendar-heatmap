@@ -4,22 +4,21 @@ import { Component } from '@angular/core';
   selector: 'my-app',
   template: `
     <calendar-heatmap
-      [someObject]="someObject"
-      [someString]="someString"
-      [someNumber]="someNumber"
-      (onChange)="print($event)">
+      [data]="data"
+      [color]="color"
+      [overview]="overview"
+      (handler)="print($event)">
     </calendar-heatmap>
   `,
 })
-
 export class AppComponent  {
-  someObject = {
+  data = [{
     'key': 'value',
-  };
-  someString = 'asdfasdfadf';
-  someNumber = 1234;
+  }];
+  color = '#cd2327';
+  overview = 'year';
 
-  print(val: any) {
+  print(val: object):void {
     console.log(val);
   }
 }

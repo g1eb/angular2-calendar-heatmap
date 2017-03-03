@@ -3,12 +3,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'calendar-heatmap',
   template: `
-    <h1>Object: {{ someObject | json }}</h1>
-    <h1>String: {{ someString }}</h1>
-    <h1>Number: {{ someNumber }}</h1>
-    <input type="text" name="key" [(ngModel)]="key" placeholder="key" />
-    <input type="text" name="value" [(ngModel)]="value" placeholder="value" />
-    <button (click)="callOnChange()">Click Me</button>
+    <h1>Data: {{ data | json }}</h1>
+    <h1>Color: {{ color }}</h1>
+    <h1>Overview: {{ overview }}</h1>
+    <button (click)="clickHandler()">Click Me</button>
   `,
   styles: [`
     :host {
@@ -17,20 +15,14 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   `],
   styleUrls:  ['./src/app/calendar-heatmap.css'],
 })
-
 export class CalendarHeatmap  {
-  @Input() someObject: any;
-  @Input() someString: string;
-  @Input() someNumber: number;
+  @Input() data: Array<object>;
+  @Input() color: string;
+  @Input() overview: string;
 
-  private key: string;
-  private value: string;
+  @Output() handler: EventEmitter<object> = new EventEmitter<object>();
 
-  @Output() onChange: EventEmitter<any> = new EventEmitter<any>();
-
-  callOnChange () {
-    this.someObject[this.key] = this.value;
-    this.key = this.value = '';
-    this.onChange.emit(this.someObject);
+  clickHandler () {
+    this.handler.emit(this.data);
   }
 }
