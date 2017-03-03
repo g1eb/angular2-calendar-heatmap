@@ -1,11 +1,13 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'calendar-heatmap',
-  template: `<div class="calendar-heatmap"></div>`,
+  template: `<div #root class="calendar-heatmap"></div>`,
   styleUrls:  ['./src/app/calendar-heatmap.css'],
 })
 export class CalendarHeatmap  {
+  @ViewChild('root') element: object;
+
   @Input() data: Array<object>;
   @Input() color: string = '#ff4500';
   @Input() overview: string = 'year';
