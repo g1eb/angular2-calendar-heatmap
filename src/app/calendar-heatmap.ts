@@ -7,46 +7,27 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 export class CalendarHeatmap  {
   @Input() data: Array<object>;
-  @Input() color: string;
-  @Input() overview: string;
+  @Input() color: string = '#ff4500';
+  @Input() overview: string = 'year';
 
   @Output() handler: EventEmitter<object> = new EventEmitter<object>();
 
   // Defaults
-  private gutter: number;
-  private item_gutter: number;
-  private width: number;
-  private height: number;
-  private item_size: number;
-  private label_padding: number;
-  private max_block_height: number;
-  private transition_duration: number;
-  private in_transition: boolean;
+  private gutter: number = 5;
+  private item_gutter: number = 1;
+  private width: number  = 1000;
+  private height: number = 200;
+  private item_size: number = 10;
+  private label_padding: number = 40;
+  private max_block_height: number = 20;
+  private transition_duration: number = 500;
+  private in_transition: boolean = false;
 
   // Tooltip defaults
-  private tooltip_width: number;
-  private tooltip_padding: number;
+  private tooltip_width: number = 250;
+  private tooltip_padding: number = 15;
 
   // Overview defaults
-  private history: Array<string>;
-  private selected: object;
-
-  constructor() {
-    this.gutter = 5;
-    this.item_gutter = 1;
-    this.width = 1000;
-    this.height = 200;
-    this.item_size = 10;
-    this.label_padding = 40;
-    this.max_block_height = 20;
-    this.transition_duration = 500;
-    this.in_transition = false;
-
-    this.tooltip_width = 250;
-    this.tooltip_padding = 15;
-
-    this.overview = 'year';
-    this.history = ['year'];
-    this.selected = {};
-  }
+  private history = ['year'];
+  private selected = {};
 }
