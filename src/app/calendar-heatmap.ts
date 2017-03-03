@@ -8,11 +8,6 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
     <h1>Overview: {{ overview }}</h1>
     <button (click)="clickHandler()">Click Me</button>
   `,
-  styles: [`
-    :host {
-      color: red;
-    }
-  `],
   styleUrls:  ['./src/app/calendar-heatmap.css'],
 })
 export class CalendarHeatmap  {
