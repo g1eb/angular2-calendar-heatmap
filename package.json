@@ -1,0 +1,30 @@
+{
+  "name": "angular2-calendar-heatmap",
+  "version": "0.0.1",
+  "description": "Angular component for d3.js calendar heatmap graph.",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@angular/core": "~2.4.0",
+    "@angular/common": "~2.4.0",
+    "@angular/compiler": "~2.4.0",
+    "@angular/platform-browser": "~2.4.0",
+    "@angular/platform-browser-dynamic": "~2.4.0",
+    "@angular/http": "~2.4.0",
+    "@angular/router": "~3.4.0",
+    "@angular/forms": "~2.4.0",
+    "systemjs": "0.19.40",
+    "core-js": "^2.4.1",
+    "zone.js": "^0.7.4",
+    "rxjs": "5.0.1"
+  },
+  "devDependencies": {
+    "typescript": "~2.2.0",
+    "@types/node": "^6.0.46"
+  },
+  "repository": {}
+}
