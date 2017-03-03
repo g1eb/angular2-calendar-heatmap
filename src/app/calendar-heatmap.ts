@@ -64,4 +64,14 @@ export class CalendarHeatmap  {
       .attr('class', 'heatmap-tooltip')
       .style('opacity', 0);
   }
+
+  /**
+   * Utility function to get number of complete weeks in a year
+   */
+  getNumberOfWeeks() {
+    var dayIndex = Math.round((moment() - moment().subtract(1, 'year').startOf('week')) / 86400000);
+    var colIndex = Math.trunc(dayIndex / 7);
+    var numWeeks = colIndex + 1;
+    return numWeeks;
+  }
 }
