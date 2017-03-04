@@ -186,7 +186,7 @@ export class CalendarHeatmap  {
       return d.total;
     });
     var color = d3.scale.linear()
-      .range(['#ffffff', this.color || '#ff4500'])
+      .range(['#ffffff', this.color])
       .domain([-0.15 * max_value, max_value]);
 
     this.items.selectAll('.item-circle').remove();
@@ -583,7 +583,7 @@ export class CalendarHeatmap  {
       })
       .attr('fill', (d: any) => {
         var color = d3.scale.linear()
-          .range(['#ffffff', this.color || '#ff4500'])
+          .range(['#ffffff', this.color])
           .domain([-0.15 * max_value, max_value]);
         return color(d.value) || '#ff4500';
       })
@@ -866,7 +866,7 @@ export class CalendarHeatmap  {
       })
       .attr('fill', (d: any) => {
         var color = d3.scale.linear()
-          .range(['#ffffff', this.color || '#ff4500'])
+          .range(['#ffffff', this.color])
           .domain([-0.15 * max_value, max_value]);
         return color(d.value) || '#ff4500';
       })
@@ -1057,7 +1057,7 @@ export class CalendarHeatmap  {
         return Math.min(projectScale.rangeBand(), this.max_block_height);
       })
       .attr('fill', () => {
-        return this.color || '#ff4500';
+        return this.color;
       })
       .style('opacity', 0)
       .on('mouseover', (d: any) => {
