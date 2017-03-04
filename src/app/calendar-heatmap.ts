@@ -521,6 +521,56 @@ export class CalendarHeatmap  {
     return this.item_size * 0.75 + (this.item_size * d.total / max) * 0.25;
   };
 
+
+  /**
+   * Draw the button for navigation purposes
+   */
+  drawButton() {
+    this.buttons.selectAll('.button').remove();
+    var button = this.buttons.append('g')
+      .attr('class', 'button button-back')
+      .style('opacity', 0)
+      .on('click', () => {
+        if ( this.in_transition ) { return; }
+
+        // Set transition boolean
+        this.in_transition = true;
+
+        // Clean the canvas from whichever overview type was on
+        if ( this.overview === 'month' ) {
+          this.removeMonthOverview();
+        } else if ( this.overview === 'week' ) {
+          this.removeWeekOverview();
+        } else if ( this.overview === 'day' ) {
+          this.removeDayOverview();
+        }
+
+        // Redraw the chart
+        this.history.pop();
+        this.overview = this.history.pop();
+        this.drawChart();
+      });
+    button.append('circle')
+      .attr('cx', this.label_padding / 2.25)
+      .attr('cy', this.label_padding / 2.5)
+      .attr('r', this.item_size / 2);
+    button.append('text')
+      .attr('x', this.label_padding / 2.25)
+      .attr('y', this.label_padding / 2.75)
+      .attr('dy', () => {
+        return Math.floor(this.width / 100) / 2.5;
+      })
+      .attr('font-size', () => {
+        return Math.floor(this.label_padding / 3) + 'px';
+      })
+      .html('&#x2190;');
+    button.transition()
+      .duration(this.transition_duration)
+      .ease('ease-in')
+      .style('opacity', 1);
+  };
+
+
   /**
    * Transition and remove items and labels related to year overview
    */
