@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "Angular component for d3.js calendar heatmap graph.",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "build:css": "cssmin < src/app/calendar-heatmap.css > dist/calendar-heatmap.min.css"
   },
   "keywords": [],
   "author": "",
@@ -24,7 +25,8 @@
   },
   "devDependencies": {
     "typescript": "~2.2.0",
-    "@types/node": "^6.0.46"
+    "@types/node": "^6.0.46",
+    "cssmin": "^0.4.3"
   },
   "repository": {}
 }
