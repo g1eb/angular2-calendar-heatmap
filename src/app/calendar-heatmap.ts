@@ -508,16 +508,6 @@ export class CalendarHeatmap  {
   };
 
   /**
-   * Helper function to hide the tooltip
-   */
-  hideTooltip() {
-    this.tooltip.transition()
-      .duration(this.transition_duration / 2)
-      .ease('ease-in')
-      .style('opacity', 0);
-  };
-
-  /**
    * Transition and remove items and labels related to year overview
    */
   removeYearOverview() {
@@ -529,6 +519,82 @@ export class CalendarHeatmap  {
       .remove();
     this.labels.selectAll('.label-day').remove();
     this.labels.selectAll('.label-month').remove();
+  };
+
+  /**
+   * Transition and remove items and labels related to month overview
+   */
+  removeMonthOverview() {
+    this.items.selectAll('.item-block-month').selectAll('.item-block-rect')
+      .transition()
+      .duration(this.transition_duration)
+      .ease('ease-in')
+      .style('opacity', 0)
+      .attr('x', (d: any, i: number) => {
+        return ( i % 2 === 0) ? -this.width/3 : this.width/3;
+      })
+      .remove();
+    this.labels.selectAll('.label-day').remove();
+    this.labels.selectAll('.label-week').remove();
+    this.hideBackButton();
+  };
+
+  /**
+   * Transition and remove items and labels related to week overview
+   */
+  removeWeekOverview() {
+    this.items.selectAll('.item-block-week').selectAll('.item-block-rect')
+      .transition()
+      .duration(this.transition_duration)
+      .ease('ease-in')
+      .style('opacity', 0)
+      .attr('x', (d: any, i: number) => {
+        return ( i % 2 === 0) ? -this.width/3 : this.width/3;
+      })
+      .remove();
+    this.labels.selectAll('.label-day').remove();
+    this.labels.selectAll('.label-week').remove();
+    this.hideBackButton();
+  };
+
+  /**
+   * Transition and remove items and labels related to daily overview
+   */
+  removeDayOverview() {
+    this.items.selectAll('.item-block')
+      .transition()
+      .duration(this.transition_duration)
+      .ease('ease-in')
+      .style('opacity', 0)
+      .attr('x', (d: any, i: number) => {
+        return ( i % 2 === 0) ? -this.width/3 : this.width/3;
+      })
+      .remove();
+    this.labels.selectAll('.label-time').remove();
+    this.labels.selectAll('.label-project').remove();
+    this.hideBackButton();
+  };
+
+  /**
+   * Helper function to hide the tooltip
+   */
+  hideTooltip() {
+    this.tooltip.transition()
+      .duration(this.transition_duration / 2)
+      .ease('ease-in')
+      .style('opacity', 0);
+  };
+
+  /**
+   * Helper function to hide the back button
+   */
+  hideBackButton() {
+    this.buttons.selectAll('.button')
+      .transition()
+      .duration(this.transition_duration)
+      .ease('ease')
+      .style('opacity', 0)
+      .remove();
   };
 
   /**
