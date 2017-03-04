@@ -64,6 +64,12 @@ export class CalendarHeatmap  {
     this.tooltip = d3.select(element).append('div')
       .attr('class', 'heatmap-tooltip')
       .style('opacity', 0);
+
+    // Calculate chart dimensions
+    this.calculateDimensions();
+
+    // Draw the chart
+    this.drawChart();
   }
 
   /**
@@ -77,15 +83,22 @@ export class CalendarHeatmap  {
   }
 
   /**
-   * Listen for window resize events, redraw the chart
+   * Utility funciton to calculate chart dimensions
    */
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
+  calculateDimensions() {
     var element = this.element.nativeElement;
     this.width = element.clientWidth < 1000 ? 1000 : element.clientWidth;
     this.item_size = ((this.width - this.label_padding) / this.getNumberOfWeeks() - this.gutter);
     this.height = this.label_padding + 7 * (this.item_size + this.gutter);
     this.svg.attr({'width': this.width, 'height': this.height});
+  }
+
+  /**
+   * Recalculate dimensions on window resize events
+   */
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.calculateDimensions();
     if ( !!this.data && !!this.data[0]['summary'] ) {
       this.drawChart();
     }
