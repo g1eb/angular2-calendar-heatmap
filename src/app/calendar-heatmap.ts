@@ -44,6 +44,7 @@ export class CalendarHeatmap  {
   private buttons: any;
   private tooltip: any;
 
+
   /**
    * Check if data is available
    */
@@ -56,6 +57,7 @@ export class CalendarHeatmap  {
     // Draw the chart
     this.drawChart();
   }
+
 
   /**
    * Get hold of the root element and append our svg
@@ -85,6 +87,7 @@ export class CalendarHeatmap  {
     this.drawChart();
   }
 
+
   /**
    * Utility function to get number of complete weeks in a year
    */
@@ -94,6 +97,7 @@ export class CalendarHeatmap  {
     var numWeeks = colIndex + 1;
     return numWeeks;
   }
+
 
   /**
    * Utility funciton to calculate chart dimensions
@@ -106,6 +110,7 @@ export class CalendarHeatmap  {
     this.svg.attr({'width': this.width, 'height': this.height});
   }
 
+
   /**
    * Recalculate dimensions on window resize events
    */
@@ -117,14 +122,15 @@ export class CalendarHeatmap  {
     }
   }
 
+
   /**
    * Helper function to check for data summary
    */
   updateDataSummary() {
     // Get daily summary if that was not provided
     if ( !this.data[0]['summary'] ) {
-      this.data.map(function (d) {
-        var summary = d['details'].reduce( function(uniques: any, project: any) {
+      this.data.map((d) => {
+        var summary = d['details'].reduce( (uniques: any, project: any) => {
           if ( !uniques[project.name] ) {
             uniques[project.name] = {
               'value': project.value
@@ -134,19 +140,20 @@ export class CalendarHeatmap  {
           }
           return uniques;
         }, {});
-        var unsorted_summary = Object.keys(summary).map(function (key) {
+        var unsorted_summary = Object.keys(summary).map((key) => {
           return {
             'name': key,
             'value': summary[key].value
           };
         });
-        d['summary'] = unsorted_summary.sort(function (a, b) {
+        d['summary'] = unsorted_summary.sort((a, b) => {
           return b.value - a.value;
         });
         return d;
       });
     }
   }
+
 
   /**
    * Draw the chart based on the current overview type
@@ -165,6 +172,7 @@ export class CalendarHeatmap  {
     }
   }
 
+
   /**
    * Draw year overview
    */
@@ -174,7 +182,7 @@ export class CalendarHeatmap  {
       this.history.push(this.overview);
     }
 
-    var max_value = d3.max(this.data, function (d: any) {
+    var max_value = d3.max(this.data, (d: any) => {
       return d.total;
     });
     var color = d3.scale.linear()
@@ -331,8 +339,8 @@ export class CalendarHeatmap  {
           }
           var n = 0;
           transition
-            .each(function() { ++n; })
-            .each('end', function() {
+            .each(() => { ++n; })
+            .each('end', function () {
               if ( !--n ) {
                 callback.apply(this, arguments);
               }
@@ -459,11 +467,13 @@ export class CalendarHeatmap  {
       });
   }
 
+
   /**
    * Draw month overview
    */
   drawMonthOverview() {
   }
+
 
   /**
    * Draw week overview
@@ -471,11 +481,13 @@ export class CalendarHeatmap  {
   drawWeekOverview() {
   }
 
+
   /**
    * Draw day overview
    */
   drawDayOverview() {
   }
+
 
   /**
    * Helper function to calculate item position on the x-axis
@@ -489,6 +501,7 @@ export class CalendarHeatmap  {
     return colIndex * (this.item_size + this.gutter) + this.label_padding;
   };
 
+
   /**
    * Helper function to calculate item position on the y-axis
    * @param d object
@@ -496,6 +509,7 @@ export class CalendarHeatmap  {
   calcItemY(d: any) {
     return this.label_padding + moment(d.date).weekday() * (this.item_size + this.gutter);
   };
+
 
   /**
    * Helper function to calculate item size
@@ -521,6 +535,7 @@ export class CalendarHeatmap  {
     this.labels.selectAll('.label-month').remove();
   };
 
+
   /**
    * Transition and remove items and labels related to month overview
    */
@@ -538,6 +553,7 @@ export class CalendarHeatmap  {
     this.labels.selectAll('.label-week').remove();
     this.hideBackButton();
   };
+
 
   /**
    * Transition and remove items and labels related to week overview
@@ -557,6 +573,7 @@ export class CalendarHeatmap  {
     this.hideBackButton();
   };
 
+
   /**
    * Transition and remove items and labels related to daily overview
    */
@@ -575,6 +592,7 @@ export class CalendarHeatmap  {
     this.hideBackButton();
   };
 
+
   /**
    * Helper function to hide the tooltip
    */
@@ -584,6 +602,7 @@ export class CalendarHeatmap  {
       .ease('ease-in')
       .style('opacity', 0);
   };
+
 
   /**
    * Helper function to hide the back button
@@ -596,6 +615,7 @@ export class CalendarHeatmap  {
       .style('opacity', 0)
       .remove();
   };
+
 
   /**
    * Helper function to convert seconds to a human readable format
