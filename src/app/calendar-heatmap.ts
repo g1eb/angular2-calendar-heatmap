@@ -220,6 +220,30 @@ export class CalendarHeatmap  {
   };
 
   /**
+   * Helper function to hide the tooltip
+   */
+  hideTooltip() {
+    this.tooltip.transition()
+      .duration(this.transition_duration / 2)
+      .ease('ease-in')
+      .style('opacity', 0);
+  };
+
+  /**
+   * Transition and remove items and labels related to year overview
+   */
+  removeYearOverview() {
+    this.items.selectAll('.item-circle')
+      .transition()
+      .duration(this.transition_duration)
+      .ease('ease')
+      .style('opacity', 0)
+      .remove();
+    this.labels.selectAll('.label-day').remove();
+    this.labels.selectAll('.label-month').remove();
+  };
+
+  /**
    * Helper function to convert seconds to a human readable format
    * @param seconds Integer
    */
