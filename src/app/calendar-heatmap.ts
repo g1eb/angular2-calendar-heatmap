@@ -21,7 +21,7 @@ export class CalendarHeatmap  {
   // Defaults
   private gutter: number = 5;
   private item_gutter: number = 1;
-  private width: number  = 1000;
+  private width: number = 1000;
   private height: number = 200;
   private item_size: number = 10;
   private label_padding: number = 40;
@@ -43,6 +43,19 @@ export class CalendarHeatmap  {
   private labels: any;
   private buttons: any;
   private tooltip: any;
+
+  /**
+   * Check if data is available
+   */
+  ngOnChanges() {
+    if ( !this.data ) { return; }
+
+    // Update data summaries
+    this.updateDataSummary();
+
+    // Draw the chart
+    this.drawChart();
+  }
 
   /**
    * Get hold of the root element and append our svg
@@ -106,11 +119,8 @@ export class CalendarHeatmap  {
 
   /**
    * Helper function to check for data summary
-   * Draw chart if data is available
    */
-  ngOnChanges() {
-    if ( !this.data ) { return; }
-
+  updateDataSummary() {
     // Get daily summary if that was not provided
     if ( !this.data[0]['summary'] ) {
       this.data.map(function (d) {
@@ -136,16 +146,13 @@ export class CalendarHeatmap  {
         return d;
       });
     }
-
-    // Draw the chart
-    this.drawChart();
   }
 
   /**
    * Draw the chart based on the current overview type
    */
   drawChart() {
-    if ( !this.data ) { return; }
+    if ( !this.svg || !this.data ) { return; }
 
     if ( this.overview === 'year' ) {
       this.drawYearOverview();
