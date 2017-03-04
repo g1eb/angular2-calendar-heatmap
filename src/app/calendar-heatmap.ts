@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, HostListener } from '@angular/core';
 
 // Declare global variables
 declare var d3: any;
@@ -74,5 +74,20 @@ export class CalendarHeatmap  {
     var colIndex = Math.trunc(dayIndex / 7);
     var numWeeks = colIndex + 1;
     return numWeeks;
+  }
+
+  /**
+   * Listen for window resize events, redraw the chart
+   */
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    var element = this.element.nativeElement;
+    this.width = element.clientWidth < 1000 ? 1000 : element.clientWidth;
+    this.item_size = ((this.width - this.label_padding) / this.getNumberOfWeeks() - this.gutter);
+    this.height = this.label_padding + 7 * (this.item_size + this.gutter);
+    this.svg.attr({'width': this.width, 'height': this.height});
+    if ( !!this.data && !!this.data[0]['summary'] ) {
+      this.drawChart();
+    }
   }
 }
