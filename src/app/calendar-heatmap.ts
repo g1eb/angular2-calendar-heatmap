@@ -90,4 +90,41 @@ export class CalendarHeatmap  {
       this.drawChart();
     }
   }
+
+  /**
+   * Helper function to check for data summary
+   * Draw chart if data is available
+   */
+  ngOnChanges() {
+    if ( !this.data ) { return; }
+
+    // Get daily summary if that was not provided
+    if ( !this.data[0]['summary'] ) {
+      this.data.map(function (d) {
+        var summary = d['details'].reduce( function(uniques: any, project: any) {
+          if ( !uniques[project.name] ) {
+            uniques[project.name] = {
+              'value': project.value
+            };
+          } else {
+            uniques[project.name].value += project.value;
+          }
+          return uniques;
+        }, {});
+        var unsorted_summary = Object.keys(summary).map(function (key) {
+          return {
+            'name': key,
+            'value': summary[key].value
+          };
+        });
+        d['summary'] = unsorted_summary.sort(function (a, b) {
+          return b.value - a.value;
+        });
+        return d;
+      });
+    }
+
+    // Draw the chart
+    this.drawChart();
+  }
 }
