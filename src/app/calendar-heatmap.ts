@@ -1017,6 +1017,207 @@ export class CalendarHeatmap  {
    * Draw day overview
    */
   drawDayOverview() {
+    // Add current overview to the history
+    if ( this.history[this.history.length-1] !== this.overview ) {
+      this.history.push(this.overview);
+    }
+
+    // Initialize selected date to today if it was not set
+    if ( !Object.keys(this.selected).length ) {
+        this.selected = this.data[this.data.length - 1];
+    }
+
+    var project_labels = this.selected['summary'].map((project: any) => {
+      return project.name;
+    });
+    var projectScale = d3.scale.ordinal()
+      .rangeRoundBands([this.label_padding, this.height])
+      .domain(project_labels);
+
+    var itemScale = d3.time.scale()
+      .range([this.label_padding * 2, this.width])
+      .domain([moment(this.selected['date']).startOf('day'), moment(this.selected['date']).endOf('day')]);
+    this.items.selectAll('.item-block').remove();
+    this.items.selectAll('.item-block')
+      .data(this.selected['details'])
+      .enter()
+      .append('rect')
+      .attr('class', 'item item-block')
+      .attr('x', (d: any) => {
+        return itemScale(moment(d.date));
+      })
+      .attr('y', (d: any) => {
+        return (projectScale(d.name) + projectScale.rangeBand() / 2) - 15;
+      })
+      .attr('width', (d: any) => {
+        var end = itemScale(d3.time.second.offset(moment(d.date), d.value));
+        return Math.max((end - itemScale(moment(d.date))), 1);
+      })
+      .attr('height', () => {
+        return Math.min(projectScale.rangeBand(), this.max_block_height);
+      })
+      .attr('fill', () => {
+        return this.color || '#ff4500';
+      })
+      .style('opacity', 0)
+      .on('mouseover', (d: any) => {
+        if ( this.in_transition ) { return; }
+
+        // Construct tooltip
+        var tooltip_html = '';
+        tooltip_html += '<div class="header"><strong>' + d.name + '</strong><div><br>';
+        tooltip_html += '<div><strong>' + (d.value ? this.formatTime(d.value) : 'No time') + ' tracked</strong></div>';
+        tooltip_html += '<div>on ' + moment(d.date).format('dddd, MMM Do YYYY HH:mm') + '</div>';
+
+        // Calculate tooltip position
+        var x = d.value * 100 / (60 * 60 * 24) + itemScale(moment(d.date));
+        while ( this.width - x < (this.tooltip_width + this.tooltip_padding * 3) ) {
+          x -= 10;
+        }
+        var y = projectScale(d.name) + projectScale.rangeBand() / 2 + this.tooltip_padding / 2;
+
+        // Show tooltip
+        this.tooltip.html(tooltip_html)
+          .style('left', x + 'px')
+          .style('top', y + 'px')
+          .transition()
+            .duration(this.transition_duration / 2)
+            .ease('ease-in')
+            .style('opacity', 1);
+      })
+      .on('mouseout', () => {
+        if ( this.in_transition ) { return; }
+        this.hideTooltip();
+      })
+      .on('click', (d: any) => {
+        if ( this.handler ) {
+          this.handler.emit(d);
+        }
+      })
+      .transition()
+        .delay(() => {
+          return (Math.cos(Math.PI * Math.random()) + 1) * this.transition_duration;
+        })
+        .duration(() => {
+          return this.transition_duration;
+        })
+        .ease('ease-in')
+        .style('opacity', 0.5)
+        .call((transition: any, callback: any) => {
+          if ( transition.empty() ) {
+            callback();
+          }
+          var n = 0;
+          transition
+            .each(() => { ++n; })
+            .each('end', function () {
+              if ( !--n ) {
+                callback.apply(this, arguments);
+              }
+            });
+          }, () => {
+            this.in_transition = false;
+          });
+
+    // Add time labels
+    var timeLabels = d3.time.hours(moment(this.selected['date']).startOf('day'), moment(this.selected['date']).endOf('day'));
+    var timeScale = d3.time.scale()
+      .range([this.label_padding * 2, this.width])
+      .domain([0, timeLabels.length]);
+    this.labels.selectAll('.label-time').remove();
+    this.labels.selectAll('.label-time')
+      .data(timeLabels)
+      .enter()
+      .append('text')
+      .attr('class', 'label label-time')
+      .attr('font-size', () => {
+        return Math.floor(this.label_padding / 3) + 'px';
+      })
+      .text((d: any) => {
+        return moment(d).format('HH:mm');
+      })
+      .attr('x', (d: any, i: number) => {
+        return timeScale(i);
+      })
+      .attr('y', this.label_padding / 2)
+      .on('mouseenter', (d: any) => {
+        if ( this.in_transition ) { return; }
+
+        var selected = itemScale(moment(d));
+        this.items.selectAll('.item-block')
+          .transition()
+          .duration(this.transition_duration)
+          .ease('ease-in')
+          .style('opacity', (d: any) => {
+            var start = itemScale(moment(d.date));
+            var end = itemScale(moment(d.date).add(d.value, 'seconds'));
+            return ( selected >= start && selected <= end ) ? 1 : 0.1;
+          });
+      })
+      .on('mouseout', () => {
+        if ( this.in_transition ) { return; }
+
+        this.items.selectAll('.item-block')
+          .transition()
+          .duration(this.transition_duration)
+          .ease('ease-in')
+          .style('opacity', 0.5);
+      });
+
+    // Add project labels
+    this.labels.selectAll('.label-project').remove();
+    this.labels.selectAll('.label-project')
+      .data(project_labels)
+      .enter()
+      .append('text')
+      .attr('class', 'label label-project')
+      .attr('x', this.gutter)
+      .attr('y', (d: any) => {
+        return projectScale(d) + projectScale.rangeBand() / 2;
+      })
+      .attr('min-height', () => {
+        return projectScale.rangeBand();
+      })
+      .style('text-anchor', 'left')
+      .attr('font-size', () => {
+        return Math.floor(this.label_padding / 3) + 'px';
+      })
+      .text((d: any) => {
+        return d;
+      })
+      .each(() => {
+        var obj = d3.select(d3.event.currentTarget),
+          text_length = obj.node().getComputedTextLength(),
+          text = obj.text();
+        while (text_length > (this.label_padding * 1.5) && text.length > 0) {
+          text = text.slice(0, -1);
+          obj.text(text + '...');
+          text_length = obj.node().getComputedTextLength();
+        }
+      })
+      .on('mouseenter', (project: any) => {
+        if ( this.in_transition ) { return; }
+
+        this.items.selectAll('.item-block')
+          .transition()
+          .duration(this.transition_duration)
+          .ease('ease-in')
+          .style('opacity', (d: any) => {
+            return (d.name === project) ? 1 : 0.1;
+          });
+      })
+      .on('mouseout', () => {
+        if ( this.in_transition ) { return; }
+
+        this.items.selectAll('.item-block')
+          .transition()
+          .duration(this.transition_duration)
+          .ease('ease-in')
+          .style('opacity', 0.5);
+      });
+
+    // Add button to switch back to year overview
+    this.drawButton();
   }
 
 
