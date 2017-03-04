@@ -20,10 +20,10 @@ export class AppComponent  {
   // Initialize random data for the demo
   private now = moment().endOf('day').toDate();
   private year_ago = moment().startOf('day').subtract(1, 'year').toDate();
-  data = d3.time.days(this.year_ago, this.now).map(function (dateElement: any) {
+  data = d3.time.days(this.year_ago, this.now).map((dateElement: any) => {
     return {
       date: dateElement,
-      details: Array.apply(null, new Array(Math.floor(Math.random() * 15))).map(function(e: number, i: number, arr: any) {
+      details: Array.apply(null, new Array(Math.floor(Math.random() * 15))).map((e: number, i: number, arr: any) => {
         return {
           'name': 'Project ' + Math.floor(Math.random() * 10),
           'date': function () {
@@ -36,7 +36,7 @@ export class AppComponent  {
         }
       }),
       init: function () {
-        this.total = this.details.reduce(function (prev: number, e: any) {
+        this.total = this.details.reduce((prev: number, e: any) => {
           return prev + e.value;
         }, 0);
         return this;
