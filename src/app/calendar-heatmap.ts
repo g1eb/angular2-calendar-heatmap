@@ -127,4 +127,46 @@ export class CalendarHeatmap  {
     // Draw the chart
     this.drawChart();
   }
+
+  /**
+   * Draw the chart based on the current overview type
+   */
+  drawChart() {
+    if ( !this.data ) { return; }
+
+    if ( this.overview === 'year' ) {
+      this.drawYearOverview();
+    } else if ( this.overview === 'month' ) {
+      this.drawMonthOverview();
+    } else if ( this.overview === 'week' ) {
+      this.drawWeekOverview();
+    } else if ( this.overview === 'day' ) {
+      this.drawDayOverview();
+    }
+  }
+
+  /**
+   * Draw year overview
+   */
+  drawYearOverview() {
+  }
+
+  /**
+   * Draw month overview
+   */
+  drawMonthOverview() {
+  }
+
+  /**
+   * Draw week overview
+   */
+  drawWeekOverview() {
+  }
+
+  /**
+   * Draw day overview
+   */
+  drawDayOverview() {
+  }
+
 }
