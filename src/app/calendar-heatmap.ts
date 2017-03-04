@@ -190,6 +190,36 @@ export class CalendarHeatmap  {
   }
 
   /**
+   * Helper function to calculate item position on the x-axis
+   * @param d object
+   */
+  calcItemX(d: any) {
+    var date = moment(d.date);
+    var year_ago = moment().startOf('day').subtract(1, 'year');
+    var dayIndex = Math.round((date - moment(year_ago).startOf('week')) / 86400000);
+    var colIndex = Math.trunc(dayIndex / 7);
+    return colIndex * (this.item_size + this.gutter) + this.label_padding;
+  };
+
+  /**
+   * Helper function to calculate item position on the y-axis
+   * @param d object
+   */
+  calcItemY(d: any) {
+    return this.label_padding + moment(d.date).weekday() * (this.item_size + this.gutter);
+  };
+
+  /**
+   * Helper function to calculate item size
+   * @param d object
+   * @param max number
+   */
+  calcItemSize(d: any, max: number) {
+    if ( max <= 0 ) { return this.item_size; }
+    return this.item_size * 0.75 + (this.item_size * d.total / max) * 0.25;
+  };
+
+  /**
    * Helper function to convert seconds to a human readable format
    * @param seconds Integer
    */
