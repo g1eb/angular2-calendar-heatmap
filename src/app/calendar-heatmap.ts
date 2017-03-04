@@ -169,4 +169,24 @@ export class CalendarHeatmap  {
   drawDayOverview() {
   }
 
+  /**
+   * Helper function to convert seconds to a human readable format
+   * @param seconds Integer
+   */
+  formatTime(seconds: string) {
+    var sec_num = parseInt(seconds, 10);
+    var hours = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var time = '';
+    if ( hours > 0 ) {
+      time += hours === 1 ? '1 hour ' : hours + ' hours ';
+    }
+    if ( minutes > 0 ) {
+      time += minutes === 1 ? '1 minute' : minutes + ' minutes';
+    }
+    if ( hours === 0 && minutes === 0 ) {
+      time = seconds + ' seconds';
+    }
+    return time;
+  };
 }
