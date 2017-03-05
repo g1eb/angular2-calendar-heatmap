@@ -13,5 +13,8 @@
   },
   "files": [
     "src/calendar-heatmap.ts"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }
