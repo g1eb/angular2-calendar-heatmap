@@ -559,6 +559,7 @@ export class CalendarHeatmap  {
     var itemScale = d3.scale.linear()
       .rangeRound([0, item_width]);
 
+    var item_gutter = this.item_gutter;
     item_block.selectAll('.item-block-rect')
       .data((d: any) => {
         return d.summary;
@@ -566,17 +567,17 @@ export class CalendarHeatmap  {
       .enter()
       .append('rect')
       .attr('class', 'item item-block-rect')
-      .attr('x', (d: any) => {
-        var total = parseInt(d3.select(d3.event.currentTarget.parentNode).attr('total'));
-        var offset = parseInt(d3.select(d3.event.currentTarget.parentNode).attr('offset'));
+      .attr('x', function (d: any) {
+        var total = parseInt(d3.select(this.parentNode).attr('total'));
+        var offset = parseInt(d3.select(this.parentNode).attr('offset'));
         itemScale.domain([0, total]);
-        d3.select(d3.event.currentTarget.parentNode).attr('offset', offset + itemScale(d.value));
+        d3.select(this.parentNode).attr('offset', offset + itemScale(d.value));
         return offset;
       })
-      .attr('width', (d: any) => {
-        var total = parseInt(d3.select(d3.event.currentTarget.parentNode).attr('total'));
+      .attr('width', function (d: any) {
+        var total = parseInt(d3.select(this.parentNode).attr('total'));
         itemScale.domain([0, total]);
-        return Math.max((itemScale(d.value) - this.item_gutter), 1)
+        return Math.max((itemScale(d.value) - item_gutter), 1)
       })
       .attr('height', () => {
         return Math.min(dayScale.rangeBand(), this.max_block_height);
@@ -842,6 +843,7 @@ export class CalendarHeatmap  {
     var itemScale = d3.scale.linear()
       .rangeRound([0, item_width]);
 
+    var item_gutter = this.item_gutter;
     item_block.selectAll('.item-block-rect')
       .data((d: any) => {
         return d.summary;
@@ -849,17 +851,17 @@ export class CalendarHeatmap  {
       .enter()
       .append('rect')
       .attr('class', 'item item-block-rect')
-      .attr('x', (d: any) => {
-        var total = parseInt(d3.select(d3.event.currentTarget.parentNode).attr('total'));
-        var offset = parseInt(d3.select(d3.event.currentTarget.parentNode).attr('offset'));
+      .attr('x', function (d: any) {
+        var total = parseInt(d3.select(this.parentNode).attr('total'));
+        var offset = parseInt(d3.select(this.parentNode).attr('offset'));
         itemScale.domain([0, total]);
-        d3.select(d3.event.currentTarget.parentNode).attr('offset', offset + itemScale(d.value));
+        d3.select(this.parentNode).attr('offset', offset + itemScale(d.value));
         return offset;
       })
-      .attr('width', (d: any) => {
-        var total = parseInt(d3.select(d3.event.currentTarget.parentNode).attr('total'));
+      .attr('width', function (d: any) {
+        var total = parseInt(d3.select(this.parentNode).attr('total'));
         itemScale.domain([0, total]);
-        return Math.max((itemScale(d.value) - this.item_gutter), 1)
+        return Math.max((itemScale(d.value) - item_gutter), 1)
       })
       .attr('height', () => {
         return Math.min(dayScale.rangeBand(), this.max_block_height);
@@ -1165,6 +1167,7 @@ export class CalendarHeatmap  {
       });
 
     // Add project labels
+    var label_padding = this.label_padding;
     this.labels.selectAll('.label-project').remove();
     this.labels.selectAll('.label-project')
       .data(project_labels)
@@ -1185,11 +1188,11 @@ export class CalendarHeatmap  {
       .text((d: any) => {
         return d;
       })
-      .each(() => {
-        var obj = d3.select(d3.event.currentTarget),
+      .each(function (d: any, i: number) {
+        var obj = d3.select(this),
           text_length = obj.node().getComputedTextLength(),
           text = obj.text();
-        while (text_length > (this.label_padding * 1.5) && text.length > 0) {
+        while (text_length > (label_padding * 1.5) && text.length > 0) {
           text = text.slice(0, -1);
           obj.text(text + '...');
           text_length = obj.node().getComputedTextLength();
