@@ -637,7 +637,7 @@ export class CalendarHeatmap  {
           var n = 0;
           transition
             .each(() => { ++n; })
-            .each('end', function() {
+            .each('end', function () {
               if ( !--n ) {
                 callback.apply(this, arguments);
               }
@@ -928,7 +928,7 @@ export class CalendarHeatmap  {
                 callback.apply(this, arguments);
               }
             });
-          }, function() {
+          }, () => {
             this.in_transition = false;
           });
 
