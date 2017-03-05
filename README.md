@@ -124,7 +124,7 @@ See [index.html](https://github.com/g1eb/angular2-calendar-heatmap/blob/master/i
 
 ## AngularJS directive
 
-If you are looking for this calendar heatmap as an AngularJS directive (version 1.x), check out [angular-calendar-heatmap](https://github.com/g1eb/angular-calendar-heatmap)
+If you want to use this heatmap as an AngularJS directive (version 1.x), see [angular-calendar-heatmap](https://github.com/g1eb/angular-calendar-heatmap)
 
 ## Non-Angular version
 
