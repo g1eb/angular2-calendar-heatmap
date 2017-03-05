@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { CalendarHeatmap } from './calendar-heatmap';
+import { CalendarHeatmap } from 'angular2-calendar-heatmap';
 
 @NgModule({
   imports:      [ BrowserModule, FormsModule ],
