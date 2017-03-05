@@ -2,21 +2,20 @@
 <html>
   <head>
     <title>Angular component for d3.js calendar heatmap graph</title>
-    <link rel="stylesheet" href="dist/calendar-heatmap.min.css">
-
-    <!-- Dependencies -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js" charset="utf-8"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.js" charset="utf-8"></script>
 
     <!-- Polyfill(s) for older browsers -->
-    <script src="node_modules/core-js/client/shim.min.js"></script>
+    <script src="https://unpkg.com/core-js/client/shim.min.js"></script>
 
-    <script src="node_modules/zone.js/dist/zone.js"></script>
-    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <!-- Dependencies -->
+    <script src="https://unpkg.com/zone.js@0.7.4?main=browser"></script>
+    <script src="https://unpkg.com/systemjs@0.19.39/dist/system.src.js"></script>
+
+    <script src="https://unpkg.com/moment@2.12.0/min/moment.min.js" charset="utf-8"></script>
+    <script src="https://unpkg.com/d3@3.5.16/d3.min.js" charset="utf-8"></script>
 
     <script src="systemjs.config.js"></script>
     <script>
-      System.import('dist/main.js').catch(function(err){ console.error(err); });
+      System.import('app/main.ts').catch(function(err){ console.error(err); });
     </script>
   </head>
   <body>
