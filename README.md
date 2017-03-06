@@ -132,6 +132,6 @@ If you are looking for a plain vanilla javascript version of the heatmap, check 
 
 ## Dependencies
 
-* [d3.js](https://d3js.org/)
-* [moment.js](http://momentjs.com/)
 * [Angular](https://angular.io/)
+* [moment.js](https://momentjs.com/)
+* [d3.js](https://d3js.org/)
