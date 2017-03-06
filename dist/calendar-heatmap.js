@@ -248,7 +248,7 @@ var CalendarHeatmap = (function () {
             tooltip_html += '<div class="header"><strong>' + (d.total ? _this.formatTime(d.total) : 'No time') + ' tracked</strong></div>';
             tooltip_html += '<div>on ' + moment(d.date).format('dddd, MMM Do YYYY') + '</div><br>';
             // Add summary to the tooltip
-            d.summary.filter(function (d) {
+            d.summary.map(function (d) {
                 tooltip_html += '<div><span><strong>' + d.name + '</strong></span>';
                 tooltip_html += '<span>' + _this.formatTime(d.value) + '</span></div>';
             });
