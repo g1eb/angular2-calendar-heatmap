@@ -281,7 +281,7 @@ export class CalendarHeatmap  {
         tooltip_html += '<div>on ' + moment(d.date).format('dddd, MMM Do YYYY') + '</div><br>';
 
         // Add summary to the tooltip
-        d.summary.filter((d: any) => {
+        d.summary.map((d: any) => {
           tooltip_html += '<div><span><strong>' + d.name + '</strong></span>';
           tooltip_html += '<span>' + this.formatTime(d.value) + '</span></div>';
         });
