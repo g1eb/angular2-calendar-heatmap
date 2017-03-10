@@ -1,1 +1,4 @@
-export { CalendarHeatmap } from './dist/calendar-heatmap.component';
+function __export(m) {
+  for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+__export(require('./dist/calendar-heatmap'));
