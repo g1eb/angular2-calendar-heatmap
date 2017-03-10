@@ -14,9 +14,8 @@
     "url": "https://github.com/g1eb/angular-calendar-heatmap/issues"
   },
   "scripts": {
-    "build": "npm run build:js && npm run build:css",
+    "build": "npm run build:js",
     "build:js": "tsc && minify dist/calendar-heatmap.js --output dist/calendar-heatmap.min.js",
-    "build:css": "cssmin < src/calendar-heatmap.css > dist/calendar-heatmap.min.css",
     "build:watch": "tsc -w",
     "serve": "serve .",
     "start": "concurrently \"npm run build:watch\" \"npm run serve\""
