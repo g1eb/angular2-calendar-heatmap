@@ -6,8 +6,64 @@ declare var moment: any;
 
 @Component({
   selector: 'calendar-heatmap',
-  template: `<div #root class="calendar-heatmap"></div>`,
-  styleUrls:  ['src/calendar-heatmap.css'],
+  template: `<div #root></div>`,
+  styles: [`
+    :host {
+      user-select: none;
+      -ms-user-select: none;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+    }
+    :host >>> .item {
+      cursor: pointer;
+    }
+    :host >>> .label {
+      cursor: pointer;
+      fill: rgb(170, 170, 170);
+      font-family: Helvetica, arial, 'Open Sans', sans-serif;
+    }
+    :host >>> .button {
+      cursor: pointer;
+      fill: transparent;
+      stroke-width: 2;
+      stroke: rgb(170, 170, 170);
+    }
+    :host >>> .button text {
+      stroke-width: 1;
+      text-anchor: middle;
+      fill: rgb(170, 170, 170);
+    }
+    :host >>> .heatmap-tooltip {
+      pointer-events: none;
+      position: absolute;
+      z-index: 9999;
+      width: 250px;
+      max-width: 250px;
+      overflow: hidden;
+      padding: 15px;
+      font-size: 12px;
+      line-height: 14px;
+      color: rgb(51, 51, 51);
+      font-family: Helvetica, arial, 'Open Sans', sans-serif;
+      background: rgba(255, 255, 255, 0.75);
+    }
+    :host >>> .heatmap-tooltip .header strong {
+      display: inline-block;
+      width: 250px;
+    }
+    :host >>> .heatmap-tooltip span {
+      display: inline-block;
+      width: 50%;
+      padding-right: 10px;
+      box-sizing: border-box;
+    }
+    :host >>> .heatmap-tooltip span,
+    :host >>> .heatmap-tooltip .header strong {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  `],
 })
 export class CalendarHeatmap  {
   @ViewChild('root') element: any;
