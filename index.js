@@ -1,1 +1,1 @@
-export { CalendarHeatmap } from './src/calendar-heatmap.component';
+export { CalendarHeatmap } from './dist/calendar-heatmap.component';
