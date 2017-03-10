@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ViewEncapsulation, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, HostListener } from '@angular/core';
 
 // Declare global variables
 declare var d3: any;
@@ -8,7 +8,6 @@ declare var moment: any;
   selector: 'calendar-heatmap',
   template: `<div #root class="calendar-heatmap"></div>`,
   styleUrls:  ['src/calendar-heatmap.css'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class CalendarHeatmap  {
   @ViewChild('root') element: any;
