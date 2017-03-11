@@ -1,7 +1,8 @@
 # Angular component for D3.js Calendar Heatmap
 
-This [d3.js](https://d3js.org/) heatmap representing time series data is used to visualize tracked time over the past year, showing details for each of the days on demand.
-Converted into an angular component for your convenience :)
+This [d3.js](https://d3js.org/) heatmap representing time series data is used to visualize tracked time over the past year, showing details for each of the days on demand. Converted into an angular component for your convenience :)  
+
+Includes visualization of year, month, week and day overview.  
 
 Inspired by Github's contribution chart.
 
