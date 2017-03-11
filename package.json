@@ -11,7 +11,7 @@
   "license": "MIT",
   "main": "index.js",
   "bugs": {
-    "url": "https://github.com/g1eb/angular-calendar-heatmap/issues"
+    "url": "https://github.com/g1eb/angular2-calendar-heatmap/issues"
   },
   "scripts": {
     "build": "npm run build:js",
