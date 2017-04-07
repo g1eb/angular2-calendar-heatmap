@@ -235,6 +235,227 @@ export class CalendarHeatmap  {
    * Draw global overview (multiple years)
    */
   drawGlobalOverview() {
+    // Add current overview to the history
+    if ( this.history[this.history.length-1] !== this.overview ) {
+      this.history.push(this.overview);
+    }
+
+    // Define start and end of the dataset
+    var start = moment(this.data[0]['date']).startOf('year');
+    var end = moment(this.data[this.data.length-1]['date']).endOf('year');
+
+    // Define array of years and total values
+    var data = this.data;
+    var year_data = d3.time.years(start, end).map((d: any) => {
+      var date = moment(d);
+      return {
+        'date': date,
+        'total': data.reduce((prev: number, current: any) => {
+          if ( moment(current.date).year() === date.year() ) {
+            prev += current.total;
+          }
+          return prev;
+        }, 0),
+        'summary': function () {
+          var summary = data.reduce((summary: any, d: any) => {
+            if ( moment(d.date).year() === date.year() ) {
+              for ( var i = 0; i < d.summary.length; i++ ) {
+                if ( !summary[d.summary[i].name] ) {
+                  summary[d.summary[i].name] = {
+                    'value': d.summary[i].value,
+                  };
+                } else {
+                  summary[d.summary[i].name].value += d.summary[i].value;
+                }
+              }
+            }
+            return summary;
+          }, {});
+          var unsorted_summary = Object.keys(summary).map((key) => {
+            return {
+              'name': key,
+              'value': summary[key].value
+            };
+          });
+          return unsorted_summary.sort((a, b) => {
+            return b.value - a.value;
+          });
+        }(),
+      };
+    });
+
+    // Calculate max value of all the years in the dataset
+    var max_value = d3.max(year_data, (d: any) => {
+      return d.total;
+    });
+
+    // Define year labels and axis
+    var year_labels = d3.time.years(start, end).map((d: any) => {
+      return moment(d);
+    });
+    var yearScale = d3.scale.ordinal()
+      .rangeRoundBands([0, this.width], 0.05)
+      .domain(year_labels.map((d: any) => {
+        return d.year();
+      }));
+
+    // Add month data items to the overview
+    this.items.selectAll('.item-block-year').remove();
+    var item_block = this.items.selectAll('.item-block-year')
+      .data(year_data)
+      .enter()
+      .append('rect')
+      .attr('class', 'item item-block-year')
+      .attr('width', () => {
+        return (this.width - this.label_padding) / year_labels.length - this.gutter * 5;
+      })
+      .attr('height', () => {
+        return this.height - this.label_padding;
+      })
+      .attr('transform', (d: any) => {
+        return 'translate(' + yearScale(d.date.year()) + ',' + this.tooltip_padding * 2 + ')';
+      })
+      .attr('fill', (d: any) => {
+        var color = d3.scale.linear()
+          .range(['#ffffff', this.color || '#ff4500'])
+          .domain([-0.15 * max_value, max_value]);
+        return color(d.total) || '#ff4500';
+      })
+      .on('click', (d: any) => {
+        if ( this.in_transition ) { return; }
+
+        // Set in_transition flag
+        this.in_transition = true;
+
+        // Set selected date to the one clicked on
+        this.selected = d;
+
+        // Hide tooltip
+        this.hideTooltip();
+
+        // Remove all month overview related items and labels
+        this.removeGlobalOverview();
+
+        // Redraw the chart
+        this.overview = 'year';
+        this.drawChart();
+      })
+      .style('opacity', 0)
+      .on('mouseover', (d: any) => {
+        if ( this.in_transition ) { return; }
+
+        // Construct tooltip
+        var tooltip_html = '';
+        tooltip_html += '<div class="header"><strong>' + (d.total ? this.formatTime(d.total) : 'No time') + ' tracked</strong></div>';
+        tooltip_html += '<div>in ' + d.date.year() + '</div><br>';
+
+        // Add summary to the tooltip
+        for ( var i = 0; i < d.summary.length; i++ ) {
+          tooltip_html += '<div><span><strong>' + d.summary[i].name + '</strong></span>';
+          tooltip_html += '<span>' + this.formatTime(d.summary[i].value) + '</span></div>';
+        };
+
+        // Calculate tooltip position
+        var x = yearScale(d.date.year()) + this.tooltip_padding;
+        while ( this.width - x < (this.tooltip_width + this.tooltip_padding * 3) ) {
+          x -= 10;
+        }
+        var y = this.tooltip_padding * 3;
+
+        // Show tooltip
+        this.tooltip.html(tooltip_html)
+          .style('left', x + 'px')
+          .style('top', y + 'px')
+          .transition()
+            .duration(this.transition_duration / 2)
+            .ease('ease-in')
+            .style('opacity', 1);
+      })
+      .on('mouseout', () => {
+        if ( this.in_transition ) { return; }
+        this.hideTooltip();
+      })
+      .transition()
+        .delay((d: any, i: number) => {
+          return this.transition_duration * (i + 1) / 10;
+        })
+        .duration(() => {
+          return this.transition_duration;
+        })
+        .ease('ease-in')
+        .style('opacity', 1)
+        .call((transition: any, callback: any) => {
+          if ( transition.empty() ) {
+            callback();
+          }
+          var n = 0;
+          transition
+            .each(() => { ++n; })
+            .each('end', function() {
+              if ( !--n ) {
+                callback.apply(this, arguments);
+              }
+            });
+          }, () => {
+            this.in_transition = false;
+          });
+
+    // Add year labels
+    this.labels.selectAll('.label-year').remove();
+    this.labels.selectAll('.label-year')
+      .data(year_labels)
+      .enter()
+      .append('text')
+      .attr('class', 'label label-year')
+      .attr('font-size', () => {
+        return Math.floor(this.label_padding / 3) + 'px';
+      })
+      .text((d: any) => {
+        return d.year();
+      })
+      .attr('x', (d: any) => {
+        return yearScale(d.year());
+      })
+      .attr('y', this.label_padding / 2)
+      .on('mouseenter', (year_label: any) => {
+        if ( this.in_transition ) { return; }
+
+        this.items.selectAll('.item-block-year')
+          .transition()
+          .duration(this.transition_duration)
+          .ease('ease-in')
+          .style('opacity', (d: any) => {
+            return ( moment(d.date).year() === year_label.year() ) ? 1 : 0.1;
+          });
+      })
+      .on('mouseout', () => {
+        if ( this.in_transition ) { return; }
+
+        this.items.selectAll('.item-block-year')
+          .transition()
+          .duration(this.transition_duration)
+          .ease('ease-in')
+          .style('opacity', 1);
+      })
+      .on('click', (d: any) => {
+        if ( this.in_transition ) { return; }
+
+        // Set in_transition flag
+        this.in_transition = true;
+
+        // Set selected month to the one clicked on
+        this.selected = d;
+
+        // Hide tooltip
+        this.hideTooltip();
+
+        // Remove all year overview related items and labels
+        this.removeGlobalOverview();
+
+        // Redraw the chart
+        this.overview = 'year';
+        this.drawChart();
+      });
   };
 
 
