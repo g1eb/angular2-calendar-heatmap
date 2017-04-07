@@ -70,7 +70,7 @@ export class CalendarHeatmap  {
 
   @Input() data: Array<object>;
   @Input() color: string = '#ff4500';
-  @Input() overview: string = 'year';
+  @Input() overview: string = 'global';
 
   @Output() handler: EventEmitter<object> = new EventEmitter<object>();
 
@@ -90,7 +90,7 @@ export class CalendarHeatmap  {
   private tooltip_padding: number = 15;
 
   // Overview defaults
-  private history = ['year'];
+  private history = ['global'];
   private selected = {};
 
   // D3 related variables
