@@ -539,6 +539,9 @@ export class CalendarHeatmap  {
           .ease('ease-in')
           .style('opacity', 1);
       });
+
+    // Add button to switch back to global overview
+    this.drawButton();
   }
 
 
@@ -1391,6 +1394,7 @@ export class CalendarHeatmap  {
       .remove();
     this.labels.selectAll('.label-day').remove();
     this.labels.selectAll('.label-month').remove();
+    this.hideBackButton();
   };
 
 
