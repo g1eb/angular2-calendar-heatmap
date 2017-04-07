@@ -19,20 +19,20 @@ export class AppComponent  {
 
   // Initialize random data for the demo
   private now = moment().endOf('day').toDate();
-  private year_ago = moment().startOf('day').subtract(1, 'year').toDate();
-  data = d3.time.days(this.year_ago, this.now).map((dateElement: any) => {
+  private time_ago = moment().startOf('day').subtract(10, 'year').toDate();
+  data = d3.time.days(this.time_ago, this.now).map((dateElement: any, index: number) => {
     return {
       date: dateElement,
       details: Array.apply(null, new Array(Math.floor(Math.random() * 15))).map((e: number, i: number, arr: any) => {
         return {
-          'name': 'Project ' + Math.floor(Math.random() * 10),
+          'name': 'Project ' + Math.round(Math.random() * 10),
           'date': function () {
             var projectDate = new Date(dateElement.getTime());
             projectDate.setHours(Math.floor(Math.random() * 24))
             projectDate.setMinutes(Math.floor(Math.random() * 60));
             return projectDate;
           }(),
-          'value': 3600 * ((arr.length - i) / 5) + Math.floor(Math.random() * 3600)
+          'value': 3600 * ((arr.length - i) / 5) + Math.floor(Math.random() * 3600) * Math.round(Math.random() * (index / 365))
         }
       }),
       init: function () {
