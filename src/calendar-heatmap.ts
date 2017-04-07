@@ -248,16 +248,16 @@ export class CalendarHeatmap  {
     }
 
     // Define start and end date of the selected year
-    var start_of_year = moment(calendarHeatmap.selected.date).startOf('year');
-    var end_of_year = moment(calendarHeatmap.selected.date).endOf('year');
+    var start_of_year = moment(this.selected['date']).startOf('year');
+    var end_of_year = moment(this.selected['date']).endOf('year');
 
     // Filter data down to the selected year
-    var year_data = calendarHeatmap.data.filter(function (d) {
+    var year_data = this.data.filter(function (d: any) {
       return start_of_year <= moment(d.date) && moment(d.date) < end_of_year;
     });
 
     // Calculate max value of the year data
-    var max_value = d3.max(year_data, function (d) {
+    var max_value = d3.max(year_data, function (d: any) {
       return d.total;
     });
 
@@ -267,13 +267,13 @@ export class CalendarHeatmap  {
 
     this.items.selectAll('.item-circle').remove();
     this.items.selectAll('.item-circle')
-      .data(this.year_data)
+      .data(year_data)
       .enter()
       .append('rect')
       .attr('class', 'item item-circle')
       .style('opacity', 0)
       .attr('x', (d: any) => {
-        return this.calcItemX(d, this.start_of_year) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
+        return this.calcItemX(d, start_of_year) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
       })
       .attr('y', (d: any) => {
         return this.calcItemY(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
@@ -324,7 +324,7 @@ export class CalendarHeatmap  {
             .duration(this.transition_duration)
             .ease('ease-in')
             .attr('x', (d: any) => {
-              return this.calcItemX(d, this.start_of_year) - (this.item_size * 1.1 - this.item_size) / 2;
+              return this.calcItemX(d, start_of_year) - (this.item_size * 1.1 - this.item_size) / 2;
             })
             .attr('y', (d: any) => {
               return this.calcItemY(d) - (this.item_size * 1.1 - this.item_size) / 2;
@@ -335,7 +335,7 @@ export class CalendarHeatmap  {
             .duration(this.transition_duration)
             .ease('ease-in')
             .attr('x', (d: any) => {
-              return this.calcItemX(d, this.start_of_year) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
+              return this.calcItemX(d, start_of_year) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
             })
             .attr('y', (d: any) => {
               return this.calcItemY(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
@@ -362,7 +362,7 @@ export class CalendarHeatmap  {
         });
 
         // Calculate tooltip position
-        var x = this.calcItemX(d, this.start_of_year) + this.item_size;
+        var x = this.calcItemX(d, start_of_year) + this.item_size;
         if ( this.width - x < (this.tooltip_width + this.tooltip_padding * 3) ) {
           x -= this.tooltip_width + this.tooltip_padding * 2;
         }
@@ -385,7 +385,7 @@ export class CalendarHeatmap  {
           .duration(this.transition_duration / 2)
           .ease('ease-in')
           .attr('x', (d: any) => {
-            return this.calcItemX(d, this.start_of_year) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
+            return this.calcItemX(d, start_of_year) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
           })
           .attr('y', (d: any) => {
             return this.calcItemY(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
@@ -426,9 +426,7 @@ export class CalendarHeatmap  {
           });
 
     // Add month labels
-    var today = moment().endOf('day');
-    var today_year_ago = moment().startOf('day').subtract(1, 'year');
-    var month_labels = d3.time.months(today_year_ago.startOf('month'), today);
+    var month_labels = d3.time.months(start_of_year, end_of_year);
     var monthScale = d3.scale.linear()
       .range([0, this.width])
       .domain([0, month_labels.length]);
