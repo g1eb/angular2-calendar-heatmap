@@ -217,7 +217,9 @@ export class CalendarHeatmap  {
   drawChart() {
     if ( !this.svg || !this.data ) { return; }
 
-    if ( this.overview === 'year' ) {
+    if ( this.overview === 'global' ) {
+      this.drawGlobalOverview();
+    } else if ( this.overview === 'year' ) {
       this.drawYearOverview();
     } else if ( this.overview === 'month' ) {
       this.drawMonthOverview();
@@ -230,6 +232,13 @@ export class CalendarHeatmap  {
 
 
   /**
+   * Draw global overview (multiple years)
+   */
+  drawGlobalOverview() {
+  }
+
+
+  /**
    * Draw year overview
    */
   drawYearOverview() {
@@ -238,22 +247,33 @@ export class CalendarHeatmap  {
       this.history.push(this.overview);
     }
 
-    var max_value = d3.max(this.data, (d: any) => {
+    // Define start and end date of the selected year
+    var start_of_year = moment(calendarHeatmap.selected.date).startOf('year');
+    var end_of_year = moment(calendarHeatmap.selected.date).endOf('year');
+
+    // Filter data down to the selected year
+    var year_data = calendarHeatmap.data.filter(function (d) {
+      return start_of_year <= moment(d.date) && moment(d.date) < end_of_year;
+    });
+
+    // Calculate max value of the year data
+    var max_value = d3.max(year_data, function (d) {
       return d.total;
     });
+
     var color = d3.scale.linear()
       .range(['#ffffff', this.color])
       .domain([-0.15 * max_value, max_value]);
 
     this.items.selectAll('.item-circle').remove();
     this.items.selectAll('.item-circle')
-      .data(this.data)
+      .data(this.year_data)
       .enter()
       .append('rect')
       .attr('class', 'item item-circle')
       .style('opacity', 0)
       .attr('x', (d: any) => {
-        return this.calcItemX(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
+        return this.calcItemX(d, this.start_of_year) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
       })
       .attr('y', (d: any) => {
         return this.calcItemY(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
@@ -304,7 +324,7 @@ export class CalendarHeatmap  {
             .duration(this.transition_duration)
             .ease('ease-in')
             .attr('x', (d: any) => {
-              return this.calcItemX(d) - (this.item_size * 1.1 - this.item_size) / 2;
+              return this.calcItemX(d, this.start_of_year) - (this.item_size * 1.1 - this.item_size) / 2;
             })
             .attr('y', (d: any) => {
               return this.calcItemY(d) - (this.item_size * 1.1 - this.item_size) / 2;
@@ -315,7 +335,7 @@ export class CalendarHeatmap  {
             .duration(this.transition_duration)
             .ease('ease-in')
             .attr('x', (d: any) => {
-              return this.calcItemX(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
+              return this.calcItemX(d, this.start_of_year) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
             })
             .attr('y', (d: any) => {
               return this.calcItemY(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
@@ -342,7 +362,7 @@ export class CalendarHeatmap  {
         });
 
         // Calculate tooltip position
-        var x = this.calcItemX(d) + this.item_size;
+        var x = this.calcItemX(d, this.start_of_year) + this.item_size;
         if ( this.width - x < (this.tooltip_width + this.tooltip_padding * 3) ) {
           x -= this.tooltip_width + this.tooltip_padding * 2;
         }
@@ -365,7 +385,7 @@ export class CalendarHeatmap  {
           .duration(this.transition_duration / 2)
           .ease('ease-in')
           .attr('x', (d: any) => {
-            return this.calcItemX(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
+            return this.calcItemX(d, this.start_of_year) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
           })
           .attr('y', (d: any) => {
             return this.calcItemY(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
@@ -1284,10 +1304,9 @@ export class CalendarHeatmap  {
    * Helper function to calculate item position on the x-axis
    * @param d object
    */
-  calcItemX(d: any) {
+  calcItemX(d: any, start_of_year: any) {
     var date = moment(d.date);
-    var year_ago = moment().startOf('day').subtract(1, 'year');
-    var dayIndex = Math.round((date - moment(year_ago).startOf('week')) / 86400000);
+    var dayIndex = Math.round((date - moment(start_of_year).startOf('week')) / 86400000);
     var colIndex = Math.trunc(dayIndex / 7);
     return colIndex * (this.item_size + this.gutter) + this.label_padding;
   };
