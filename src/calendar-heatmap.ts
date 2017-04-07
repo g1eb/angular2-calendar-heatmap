@@ -112,7 +112,7 @@ export class CalendarHeatmap  {
 
     // Draw the chart
     this.drawChart();
-  }
+  };
 
 
   /**
@@ -141,7 +141,7 @@ export class CalendarHeatmap  {
 
     // Draw the chart
     this.drawChart();
-  }
+  };
 
 
   /**
@@ -152,7 +152,7 @@ export class CalendarHeatmap  {
     var colIndex = Math.trunc(dayIndex / 7);
     var numWeeks = colIndex + 1;
     return numWeeks;
-  }
+  };
 
 
   /**
@@ -164,7 +164,7 @@ export class CalendarHeatmap  {
     this.item_size = ((this.width - this.label_padding) / this.getNumberOfWeeks() - this.gutter);
     this.height = this.label_padding + 7 * (this.item_size + this.gutter);
     this.svg.attr({'width': this.width, 'height': this.height});
-  }
+  };
 
 
   /**
@@ -176,7 +176,7 @@ export class CalendarHeatmap  {
     if ( !!this.data && !!this.data[0]['summary'] ) {
       this.drawChart();
     }
-  }
+  };
 
 
   /**
@@ -228,14 +228,14 @@ export class CalendarHeatmap  {
     } else if ( this.overview === 'day' ) {
       this.drawDayOverview();
     }
-  }
+  };
 
 
   /**
    * Draw global overview (multiple years)
    */
   drawGlobalOverview() {
-  }
+  };
 
 
   /**
@@ -540,9 +540,9 @@ export class CalendarHeatmap  {
           .style('opacity', 1);
       });
 
-    // Add button to switch back to global overview
+    // Add button to switch back to previous overview
     this.drawButton();
-  }
+  };
 
 
   /**
@@ -827,9 +827,9 @@ export class CalendarHeatmap  {
           .style('opacity', 1);
       });
 
-    // Add button to switch back to year overview
+    // Add button to switch back to previous overview
     this.drawButton();
-  }
+  };
 
 
   /**
@@ -1087,9 +1087,9 @@ export class CalendarHeatmap  {
           .style('opacity', 1);
       });
 
-    // Add button to switch back to year overview
+    // Add button to switch back to previous overview
     this.drawButton();
-  }
+  };
 
 
   /**
@@ -1296,9 +1296,9 @@ export class CalendarHeatmap  {
           .style('opacity', 0.5);
       });
 
-    // Add button to switch back to year overview
+    // Add button to switch back to previous overview
     this.drawButton();
-  }
+  };
 
 
   /**
