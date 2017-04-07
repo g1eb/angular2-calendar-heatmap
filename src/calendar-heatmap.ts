@@ -1348,7 +1348,9 @@ export class CalendarHeatmap  {
         this.in_transition = true;
 
         // Clean the canvas from whichever overview type was on
-        if ( this.overview === 'month' ) {
+        if ( this.overview === 'year' ) {
+          this.removeYearOverview();
+        } else if ( this.overview === 'month' ) {
           this.removeMonthOverview();
         } else if ( this.overview === 'week' ) {
           this.removeWeekOverview();
