@@ -1590,9 +1590,9 @@ export class CalendarHeatmap  {
       .attr('r', this.item_size / 2);
     button.append('text')
       .attr('x', this.label_padding / 2.25)
-      .attr('y', this.label_padding / 2.75)
+      .attr('y', this.label_padding / 2.5)
       .attr('dy', () => {
-        return Math.floor(this.width / 100) / 2.5;
+        return Math.floor(this.width / 100) / 3;
       })
       .attr('font-size', () => {
         return Math.floor(this.label_padding / 3) + 'px';
