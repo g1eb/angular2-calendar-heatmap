@@ -1385,6 +1385,20 @@ export class CalendarHeatmap  {
 
 
   /**
+   * Transition and remove items and labels related to global overview
+   */
+  removeGlobalOverview() {
+    this.items.selectAll('.item-block-year')
+      .transition()
+      .duration(this.transition_duration)
+      .ease('ease-out')
+      .style('opacity', 0)
+      .remove();
+    this.labels.selectAll('.label-year').remove();
+  };
+
+
+  /**
    * Transition and remove items and labels related to year overview
    */
   removeYearOverview() {
