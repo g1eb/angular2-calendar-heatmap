@@ -13,7 +13,7 @@ var core_1 = require("@angular/core");
 var CalendarHeatmap = (function () {
     function CalendarHeatmap() {
         this.color = '#ff4500';
-        this.overview = 'year';
+        this.overview = 'global';
         this.handler = new core_1.EventEmitter();
         // Defaults
         this.gutter = 5;
@@ -29,7 +29,7 @@ var CalendarHeatmap = (function () {
         this.tooltip_width = 250;
         this.tooltip_padding = 15;
         // Overview defaults
-        this.history = ['year'];
+        this.history = ['global'];
         this.selected = {};
     }
     /**
@@ -44,6 +44,7 @@ var CalendarHeatmap = (function () {
         // Draw the chart
         this.drawChart();
     };
+    ;
     /**
      * Get hold of the root element and append our svg
      */
@@ -66,6 +67,7 @@ var CalendarHeatmap = (function () {
         // Draw the chart
         this.drawChart();
     };
+    ;
     /**
      * Utility function to get number of complete weeks in a year
      */
@@ -75,6 +77,7 @@ var CalendarHeatmap = (function () {
         var numWeeks = colIndex + 1;
         return numWeeks;
     };
+    ;
     /**
      * Utility funciton to calculate chart dimensions
      */
@@ -85,6 +88,7 @@ var CalendarHeatmap = (function () {
         this.height = this.label_padding + 7 * (this.item_size + this.gutter);
         this.svg.attr({ 'width': this.width, 'height': this.height });
     };
+    ;
     /**
      * Recalculate dimensions on window resize events
      */
@@ -94,6 +98,7 @@ var CalendarHeatmap = (function () {
             this.drawChart();
         }
     };
+    ;
     /**
      * Helper function to check for data summary
      */
@@ -132,7 +137,10 @@ var CalendarHeatmap = (function () {
         if (!this.svg || !this.data) {
             return;
         }
-        if (this.overview === 'year') {
+        if (this.overview === 'global') {
+            this.drawGlobalOverview();
+        }
+        else if (this.overview === 'year') {
             this.drawYearOverview();
         }
         else if (this.overview === 'month') {
@@ -145,6 +153,227 @@ var CalendarHeatmap = (function () {
             this.drawDayOverview();
         }
     };
+    ;
+    /**
+     * Draw global overview (multiple years)
+     */
+    CalendarHeatmap.prototype.drawGlobalOverview = function () {
+        var _this = this;
+        // Add current overview to the history
+        if (this.history[this.history.length - 1] !== this.overview) {
+            this.history.push(this.overview);
+        }
+        // Define start and end of the dataset
+        var start = moment(this.data[0]['date']).startOf('year');
+        var end = moment(this.data[this.data.length - 1]['date']).endOf('year');
+        // Define array of years and total values
+        var data = this.data;
+        var year_data = d3.time.years(start, end).map(function (d) {
+            var date = moment(d);
+            return {
+                'date': date,
+                'total': data.reduce(function (prev, current) {
+                    if (moment(current.date).year() === date.year()) {
+                        prev += current.total;
+                    }
+                    return prev;
+                }, 0),
+                'summary': function () {
+                    var summary = data.reduce(function (summary, d) {
+                        if (moment(d.date).year() === date.year()) {
+                            for (var i = 0; i < d.summary.length; i++) {
+                                if (!summary[d.summary[i].name]) {
+                                    summary[d.summary[i].name] = {
+                                        'value': d.summary[i].value,
+                                    };
+                                }
+                                else {
+                                    summary[d.summary[i].name].value += d.summary[i].value;
+                                }
+                            }
+                        }
+                        return summary;
+                    }, {});
+                    var unsorted_summary = Object.keys(summary).map(function (key) {
+                        return {
+                            'name': key,
+                            'value': summary[key].value
+                        };
+                    });
+                    return unsorted_summary.sort(function (a, b) {
+                        return b.value - a.value;
+                    });
+                }(),
+            };
+        });
+        // Calculate max value of all the years in the dataset
+        var max_value = d3.max(year_data, function (d) {
+            return d.total;
+        });
+        // Define year labels and axis
+        var year_labels = d3.time.years(start, end).map(function (d) {
+            return moment(d);
+        });
+        var yearScale = d3.scale.ordinal()
+            .rangeRoundBands([0, this.width], 0.05)
+            .domain(year_labels.map(function (d) {
+            return d.year();
+        }));
+        // Add month data items to the overview
+        this.items.selectAll('.item-block-year').remove();
+        var item_block = this.items.selectAll('.item-block-year')
+            .data(year_data)
+            .enter()
+            .append('rect')
+            .attr('class', 'item item-block-year')
+            .attr('width', function () {
+            return (_this.width - _this.label_padding) / year_labels.length - _this.gutter * 5;
+        })
+            .attr('height', function () {
+            return _this.height - _this.label_padding;
+        })
+            .attr('transform', function (d) {
+            return 'translate(' + yearScale(d.date.year()) + ',' + _this.tooltip_padding * 2 + ')';
+        })
+            .attr('fill', function (d) {
+            var color = d3.scale.linear()
+                .range(['#ffffff', _this.color || '#ff4500'])
+                .domain([-0.15 * max_value, max_value]);
+            return color(d.total) || '#ff4500';
+        })
+            .on('click', function (d) {
+            if (_this.in_transition) {
+                return;
+            }
+            // Set in_transition flag
+            _this.in_transition = true;
+            // Set selected date to the one clicked on
+            _this.selected = d;
+            // Hide tooltip
+            _this.hideTooltip();
+            // Remove all month overview related items and labels
+            _this.removeGlobalOverview();
+            // Redraw the chart
+            _this.overview = 'year';
+            _this.drawChart();
+        })
+            .style('opacity', 0)
+            .on('mouseover', function (d) {
+            if (_this.in_transition) {
+                return;
+            }
+            // Construct tooltip
+            var tooltip_html = '';
+            tooltip_html += '<div class="header"><strong>' + (d.total ? _this.formatTime(d.total) : 'No time') + ' tracked</strong></div>';
+            tooltip_html += '<div>in ' + d.date.year() + '</div><br>';
+            // Add summary to the tooltip
+            for (var i = 0; i < d.summary.length; i++) {
+                tooltip_html += '<div><span><strong>' + d.summary[i].name + '</strong></span>';
+                tooltip_html += '<span>' + _this.formatTime(d.summary[i].value) + '</span></div>';
+            }
+            ;
+            // Calculate tooltip position
+            var x = yearScale(d.date.year()) + _this.tooltip_padding;
+            while (_this.width - x < (_this.tooltip_width + _this.tooltip_padding * 3)) {
+                x -= 10;
+            }
+            var y = _this.tooltip_padding * 3;
+            // Show tooltip
+            _this.tooltip.html(tooltip_html)
+                .style('left', x + 'px')
+                .style('top', y + 'px')
+                .transition()
+                .duration(_this.transition_duration / 2)
+                .ease('ease-in')
+                .style('opacity', 1);
+        })
+            .on('mouseout', function () {
+            if (_this.in_transition) {
+                return;
+            }
+            _this.hideTooltip();
+        })
+            .transition()
+            .delay(function (d, i) {
+            return _this.transition_duration * (i + 1) / 10;
+        })
+            .duration(function () {
+            return _this.transition_duration;
+        })
+            .ease('ease-in')
+            .style('opacity', 1)
+            .call(function (transition, callback) {
+            if (transition.empty()) {
+                callback();
+            }
+            var n = 0;
+            transition
+                .each(function () { ++n; })
+                .each('end', function () {
+                if (!--n) {
+                    callback.apply(this, arguments);
+                }
+            });
+        }, function () {
+            _this.in_transition = false;
+        });
+        // Add year labels
+        this.labels.selectAll('.label-year').remove();
+        this.labels.selectAll('.label-year')
+            .data(year_labels)
+            .enter()
+            .append('text')
+            .attr('class', 'label label-year')
+            .attr('font-size', function () {
+            return Math.floor(_this.label_padding / 3) + 'px';
+        })
+            .text(function (d) {
+            return d.year();
+        })
+            .attr('x', function (d) {
+            return yearScale(d.year());
+        })
+            .attr('y', this.label_padding / 2)
+            .on('mouseenter', function (year_label) {
+            if (_this.in_transition) {
+                return;
+            }
+            _this.items.selectAll('.item-block-year')
+                .transition()
+                .duration(_this.transition_duration)
+                .ease('ease-in')
+                .style('opacity', function (d) {
+                return (moment(d.date).year() === year_label.year()) ? 1 : 0.1;
+            });
+        })
+            .on('mouseout', function () {
+            if (_this.in_transition) {
+                return;
+            }
+            _this.items.selectAll('.item-block-year')
+                .transition()
+                .duration(_this.transition_duration)
+                .ease('ease-in')
+                .style('opacity', 1);
+        })
+            .on('click', function (d) {
+            if (_this.in_transition) {
+                return;
+            }
+            // Set in_transition flag
+            _this.in_transition = true;
+            // Set selected month to the one clicked on
+            _this.selected = d;
+            // Hide tooltip
+            _this.hideTooltip();
+            // Remove all year overview related items and labels
+            _this.removeGlobalOverview();
+            // Redraw the chart
+            _this.overview = 'year';
+            _this.drawChart();
+        });
+    };
+    ;
     /**
      * Draw year overview
      */
@@ -154,7 +383,15 @@ var CalendarHeatmap = (function () {
         if (this.history[this.history.length - 1] !== this.overview) {
             this.history.push(this.overview);
         }
-        var max_value = d3.max(this.data, function (d) {
+        // Define start and end date of the selected year
+        var start_of_year = moment(this.selected['date']).startOf('year');
+        var end_of_year = moment(this.selected['date']).endOf('year');
+        // Filter data down to the selected year
+        var year_data = this.data.filter(function (d) {
+            return start_of_year <= moment(d.date) && moment(d.date) < end_of_year;
+        });
+        // Calculate max value of the year data
+        var max_value = d3.max(year_data, function (d) {
             return d.total;
         });
         var color = d3.scale.linear()
@@ -162,13 +399,13 @@ var CalendarHeatmap = (function () {
             .domain([-0.15 * max_value, max_value]);
         this.items.selectAll('.item-circle').remove();
         this.items.selectAll('.item-circle')
-            .data(this.data)
+            .data(year_data)
             .enter()
             .append('rect')
             .attr('class', 'item item-circle')
             .style('opacity', 0)
             .attr('x', function (d) {
-            return _this.calcItemX(d) + (_this.item_size - _this.calcItemSize(d, max_value)) / 2;
+            return _this.calcItemX(d, start_of_year) + (_this.item_size - _this.calcItemSize(d, max_value)) / 2;
         })
             .attr('y', function (d) {
             return _this.calcItemY(d) + (_this.item_size - _this.calcItemSize(d, max_value)) / 2;
@@ -218,7 +455,7 @@ var CalendarHeatmap = (function () {
                     .duration(_this.transition_duration)
                     .ease('ease-in')
                     .attr('x', function (d) {
-                    return _this.calcItemX(d) - (_this.item_size * 1.1 - _this.item_size) / 2;
+                    return _this.calcItemX(d, start_of_year) - (_this.item_size * 1.1 - _this.item_size) / 2;
                 })
                     .attr('y', function (d) {
                     return _this.calcItemY(d) - (_this.item_size * 1.1 - _this.item_size) / 2;
@@ -229,7 +466,7 @@ var CalendarHeatmap = (function () {
                     .duration(_this.transition_duration)
                     .ease('ease-in')
                     .attr('x', function (d) {
-                    return _this.calcItemX(d) + (_this.item_size - _this.calcItemSize(d, max_value)) / 2;
+                    return _this.calcItemX(d, start_of_year) + (_this.item_size - _this.calcItemSize(d, max_value)) / 2;
                 })
                     .attr('y', function (d) {
                     return _this.calcItemY(d) + (_this.item_size - _this.calcItemSize(d, max_value)) / 2;
@@ -253,7 +490,7 @@ var CalendarHeatmap = (function () {
                 tooltip_html += '<span>' + _this.formatTime(d.value) + '</span></div>';
             });
             // Calculate tooltip position
-            var x = _this.calcItemX(d) + _this.item_size;
+            var x = _this.calcItemX(d, start_of_year) + _this.item_size;
             if (_this.width - x < (_this.tooltip_width + _this.tooltip_padding * 3)) {
                 x -= _this.tooltip_width + _this.tooltip_padding * 2;
             }
@@ -276,7 +513,7 @@ var CalendarHeatmap = (function () {
                 .duration(_this.transition_duration / 2)
                 .ease('ease-in')
                 .attr('x', function (d) {
-                return _this.calcItemX(d) + (_this.item_size - _this.calcItemSize(d, max_value)) / 2;
+                return _this.calcItemX(d, start_of_year) + (_this.item_size - _this.calcItemSize(d, max_value)) / 2;
             })
                 .attr('y', function (d) {
                 return _this.calcItemY(d) + (_this.item_size - _this.calcItemSize(d, max_value)) / 2;
@@ -315,9 +552,7 @@ var CalendarHeatmap = (function () {
             _this.in_transition = false;
         });
         // Add month labels
-        var today = moment().endOf('day');
-        var today_year_ago = moment().startOf('day').subtract(1, 'year');
-        var month_labels = d3.time.months(today_year_ago.startOf('month'), today);
+        var month_labels = d3.time.months(start_of_year, end_of_year);
         var monthScale = d3.scale.linear()
             .range([0, this.width])
             .domain([0, month_labels.length]);
@@ -430,7 +665,10 @@ var CalendarHeatmap = (function () {
                 .ease('ease-in')
                 .style('opacity', 1);
         });
+        // Add button to switch back to previous overview
+        this.drawButton();
     };
+    ;
     /**
      * Draw month overview
      */
@@ -703,9 +941,10 @@ var CalendarHeatmap = (function () {
                 .ease('ease-in')
                 .style('opacity', 1);
         });
-        // Add button to switch back to year overview
+        // Add button to switch back to previous overview
         this.drawButton();
     };
+    ;
     /**
      * Draw week overview
      */
@@ -954,9 +1193,10 @@ var CalendarHeatmap = (function () {
                 .ease('ease-in')
                 .style('opacity', 1);
         });
-        // Add button to switch back to year overview
+        // Add button to switch back to previous overview
         this.drawButton();
     };
+    ;
     /**
      * Draw day overview
      */
@@ -1159,17 +1399,17 @@ var CalendarHeatmap = (function () {
                 .ease('ease-in')
                 .style('opacity', 0.5);
         });
-        // Add button to switch back to year overview
+        // Add button to switch back to previous overview
         this.drawButton();
     };
+    ;
     /**
      * Helper function to calculate item position on the x-axis
      * @param d object
      */
-    CalendarHeatmap.prototype.calcItemX = function (d) {
+    CalendarHeatmap.prototype.calcItemX = function (d, start_of_year) {
         var date = moment(d.date);
-        var year_ago = moment().startOf('day').subtract(1, 'year');
-        var dayIndex = Math.round((date - moment(year_ago).startOf('week')) / 86400000);
+        var dayIndex = Math.round((date - moment(start_of_year).startOf('week')) / 86400000);
         var colIndex = Math.trunc(dayIndex / 7);
         return colIndex * (this.item_size + this.gutter) + this.label_padding;
     };
@@ -1210,7 +1450,10 @@ var CalendarHeatmap = (function () {
             // Set transition boolean
             _this.in_transition = true;
             // Clean the canvas from whichever overview type was on
-            if (_this.overview === 'month') {
+            if (_this.overview === 'year') {
+                _this.removeYearOverview();
+            }
+            else if (_this.overview === 'month') {
                 _this.removeMonthOverview();
             }
             else if (_this.overview === 'week') {
@@ -1230,9 +1473,9 @@ var CalendarHeatmap = (function () {
             .attr('r', this.item_size / 2);
         button.append('text')
             .attr('x', this.label_padding / 2.25)
-            .attr('y', this.label_padding / 2.75)
+            .attr('y', this.label_padding / 2.5)
             .attr('dy', function () {
-            return Math.floor(_this.width / 100) / 2.5;
+            return Math.floor(_this.width / 100) / 3;
         })
             .attr('font-size', function () {
             return Math.floor(_this.label_padding / 3) + 'px';
@@ -1242,6 +1485,19 @@ var CalendarHeatmap = (function () {
             .duration(this.transition_duration)
             .ease('ease-in')
             .style('opacity', 1);
+    };
+    ;
+    /**
+     * Transition and remove items and labels related to global overview
+     */
+    CalendarHeatmap.prototype.removeGlobalOverview = function () {
+        this.items.selectAll('.item-block-year')
+            .transition()
+            .duration(this.transition_duration)
+            .ease('ease-out')
+            .style('opacity', 0)
+            .remove();
+        this.labels.selectAll('.label-year').remove();
     };
     ;
     /**
@@ -1256,6 +1512,7 @@ var CalendarHeatmap = (function () {
             .remove();
         this.labels.selectAll('.label-day').remove();
         this.labels.selectAll('.label-month').remove();
+        this.hideBackButton();
     };
     ;
     /**
