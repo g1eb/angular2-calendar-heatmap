@@ -252,12 +252,12 @@ export class CalendarHeatmap  {
     var end_of_year = moment(this.selected['date']).endOf('year');
 
     // Filter data down to the selected year
-    var year_data = this.data.filter(function (d: any) {
+    var year_data = this.data.filter((d: any) => {
       return start_of_year <= moment(d.date) && moment(d.date) < end_of_year;
     });
 
     // Calculate max value of the year data
-    var max_value = d3.max(year_data, function (d: any) {
+    var max_value = d3.max(year_data, (d: any) => {
       return d.total;
     });
 
@@ -401,7 +401,7 @@ export class CalendarHeatmap  {
         this.hideTooltip();
       })
       .transition()
-        .delay( () => {
+        .delay(() => {
           return (Math.cos(Math.PI * Math.random()) + 1) * this.transition_duration;
         })
         .duration(() => {
