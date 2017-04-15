@@ -264,17 +264,56 @@ var CalendarHeatmap = (function () {
             }
             // Construct tooltip
             var tooltip_html = '';
-            tooltip_html += '<div class="header"><strong>' + (d.total ? _this.formatTime(d.total) : 'No time') + ' tracked</strong></div>';
-            tooltip_html += '<div>in ' + d.date.year() + '</div><br>';
-            // Add summary to the tooltip
-            for (var i = 0; i < d.summary.length; i++) {
-                tooltip_html += '<div><span><strong>' + d.summary[i].name + '</strong></span>';
-                tooltip_html += '<span>' + _this.formatTime(d.summary[i].value) + '</span></div>';
+            tooltip_html += '<div><span><strong>Total time tracked:</strong></span>';
+            var sec = parseInt(d.total, 10);
+            var days = Math.floor(sec / 86400);
+            if (days > 0) {
+                tooltip_html += '<span>' + (days === 1 ? '1 day' : days + ' days') + '</span></div>';
             }
-            ;
+            var hours = Math.floor((sec - (days * 86400)) / 3600);
+            if (hours > 0) {
+                if (days > 0) {
+                    tooltip_html += '<div><span></span><span>' + (hours === 1 ? '1 hour' : hours + ' hours') + '</span></div>';
+                }
+                else {
+                    tooltip_html += '<span>' + (hours === 1 ? '1 hour' : hours + ' hours') + '</span></div>';
+                }
+            }
+            var minutes = Math.floor((sec - (days * 86400) - (hours * 3600)) / 60);
+            if (minutes > 0) {
+                if (days > 0 || hours > 0) {
+                    tooltip_html += '<div><span></span><span>' + (minutes === 1 ? '1 minute' : minutes + ' minutes') + '</span></div>';
+                }
+                else {
+                    tooltip_html += '<span>' + (minutes === 1 ? '1 minute' : minutes + ' minutes') + '</span></div>';
+                }
+            }
+            tooltip_html += '<br />';
+            if (d.summary.length <= 5) {
+                for (var i = 0; i < d.summary.length; i++) {
+                    tooltip_html += '<div><span><strong>' + d.summary[i].name + '</strong></span>';
+                    tooltip_html += '<span>' + _this.formatTime(d.summary[i].value) + '</span></div>';
+                }
+                ;
+            }
+            else {
+                for (var i = 0; i < 5; i++) {
+                    tooltip_html += '<div><span><strong>' + d.summary[i].name + '</strong></span>';
+                    tooltip_html += '<span>' + _this.formatTime(d.summary[i].value) + '</span></div>';
+                }
+                ;
+                tooltip_html += '<br />';
+                var other_projects_sum = 0;
+                for (var i = 5; i < d.summary.length; i++) {
+                    other_projects_sum = +d.summary[i].value;
+                }
+                ;
+                tooltip_html += '<div><span><strong>Other:</strong></span>';
+                tooltip_html += '<span>' + _this.formatTime(other_projects_sum) + '</span></div>';
+            }
             // Calculate tooltip position
-            var x = yearScale(d.date.year()) + _this.tooltip_padding;
-            while (_this.width - x < (_this.tooltip_width + _this.tooltip_padding * 3)) {
+            var x = yearScale(d.date.year()) + _this.tooltip_padding * 2;
+            while (_this.width - x < (_this.tooltip_width + _this.tooltip_padding * 5)) {
                 x -= 10;
             }
             var y = _this.tooltip_padding * 3;
@@ -1599,9 +1638,8 @@ var CalendarHeatmap = (function () {
      * @param seconds Integer
      */
     CalendarHeatmap.prototype.formatTime = function (seconds) {
-        var sec_num = parseInt(seconds, 10);
-        var hours = Math.floor(sec_num / 3600);
-        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        var hours = Math.floor(seconds / 3600);
+        var minutes = Math.floor((seconds - (hours * 3600)) / 60);
         var time = '';
         if (hours > 0) {
             time += hours === 1 ? '1 hour ' : hours + ' hours ';
@@ -1610,7 +1648,7 @@ var CalendarHeatmap = (function () {
             time += minutes === 1 ? '1 minute' : minutes + ' minutes';
         }
         if (hours === 0 && minutes === 0) {
-            time = seconds + ' seconds';
+            time = Math.round(seconds) + ' seconds';
         }
         return time;
     };
