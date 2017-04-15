@@ -392,8 +392,8 @@ export class CalendarHeatmap  {
         }
 
         // Calculate tooltip position
-        var x = yearScale(d.date.year()) + this.tooltip_padding;
-        while ( this.width - x < (this.tooltip_width + this.tooltip_padding * 3) ) {
+        var x = yearScale(d.date.year()) + this.tooltip_padding * 2;
+        while ( this.width - x < (this.tooltip_width + this.tooltip_padding * 5) ) {
           x -= 10;
         }
         var y = this.tooltip_padding * 3;
