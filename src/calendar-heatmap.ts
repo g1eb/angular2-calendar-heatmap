@@ -371,6 +371,7 @@ export class CalendarHeatmap  {
         }
         tooltip_html += '<br />';
 
+        // Add summary to the tooltip
         if ( d.summary.length <= 5 ) {
           for ( var i = 0; i < d.summary.length; i++ ) {
             tooltip_html += '<div><span><strong>' + d.summary[i].name + '</strong></span>';
