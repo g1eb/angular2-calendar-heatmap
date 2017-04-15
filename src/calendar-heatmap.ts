@@ -371,11 +371,25 @@ export class CalendarHeatmap  {
         }
         tooltip_html += '<br />';
 
-        // Add summary to the tooltip
-        for ( var i = 0; i < d.summary.length; i++ ) {
-          tooltip_html += '<div><span><strong>' + d.summary[i].name + '</strong></span>';
-          tooltip_html += '<span>' + this.formatTime(d.summary[i].value) + '</span></div>';
-        };
+        if ( d.summary.length <= 5 ) {
+          for ( var i = 0; i < d.summary.length; i++ ) {
+            tooltip_html += '<div><span><strong>' + d.summary[i].name + '</strong></span>';
+            tooltip_html += '<span>' + this.formatTime(d.summary[i].value) + '</span></div>';
+          };
+        } else {
+          for ( var i = 0; i < 5; i++ ) {
+            tooltip_html += '<div><span><strong>' + d.summary[i].name + '</strong></span>';
+            tooltip_html += '<span>' + this.formatTime(d.summary[i].value) + '</span></div>';
+          };
+          tooltip_html += '<br />';
+
+          var other_projects_sum = 0;
+          for ( var i = 5; i < d.summary.length; i++ ) {
+            other_projects_sum =+ d.summary[i].value;
+          };
+          tooltip_html += '<div><span><strong>Other:</strong></span>';
+          tooltip_html += '<span>' + this.formatTime(other_projects_sum) + '</span></div>';
+        }
 
         // Calculate tooltip position
         var x = yearScale(d.date.year()) + this.tooltip_padding;
