@@ -45,7 +45,7 @@ npm install angular2-calendar-heatmap
 
 
 ```javascript
-import { CalendarHeatmap } from 'calendar-heatmap';
+import { CalendarHeatmap } from 'angular2-calendar-heatmap';
 
 declarations: [ ...... , CalendarHeatmap ],
 ```
