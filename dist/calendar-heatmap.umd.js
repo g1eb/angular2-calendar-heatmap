@@ -1,10 +1,14 @@
-import { Component, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core')) :
+	typeof define === 'function' && define.amd ? define(['exports', '@angular/core'], factory) :
+	(factory((global.CalendarHeatmap = global.CalendarHeatmap || {}),global._angular_core));
+}(this, (function (exports,_angular_core) { 'use strict';
 
 var CalendarHeatmap = (function () {
     function CalendarHeatmap() {
         this.color = '#ff4500';
         this.overview = 'global';
-        this.handler = new EventEmitter();
+        this.handler = new _angular_core.EventEmitter();
         this.gutter = 5;
         this.item_gutter = 1;
         this.width = 1000;
@@ -1670,7 +1674,7 @@ var CalendarHeatmap = (function () {
     return CalendarHeatmap;
 }());
 CalendarHeatmap.decorators = [
-    { type: Component, args: [{
+    { type: _angular_core.Component, args: [{
                 selector: 'calendar-heatmap',
                 template: "<div #root></div>",
                 styles: ["\n    :host {\n      user-select: none;\n      -ms-user-select: none;\n      -moz-user-select: none;\n      -webkit-user-select: none;\n    }\n    :host >>> .item {\n      cursor: pointer;\n    }\n    :host >>> .label {\n      cursor: pointer;\n      fill: rgb(170, 170, 170);\n      font-family: Helvetica, arial, 'Open Sans', sans-serif;\n    }\n    :host >>> .button {\n      cursor: pointer;\n      fill: transparent;\n      stroke-width: 2;\n      stroke: rgb(170, 170, 170);\n    }\n    :host >>> .button text {\n      stroke-width: 1;\n      text-anchor: middle;\n      fill: rgb(170, 170, 170);\n    }\n    :host >>> .heatmap-tooltip {\n      pointer-events: none;\n      position: absolute;\n      z-index: 9999;\n      width: 250px;\n      max-width: 250px;\n      overflow: hidden;\n      padding: 15px;\n      font-size: 12px;\n      line-height: 14px;\n      color: rgb(51, 51, 51);\n      font-family: Helvetica, arial, 'Open Sans', sans-serif;\n      background: rgba(255, 255, 255, 0.75);\n    }\n    :host >>> .heatmap-tooltip .header strong {\n      display: inline-block;\n      width: 250px;\n    }\n    :host >>> .heatmap-tooltip span {\n      display: inline-block;\n      width: 50%;\n      padding-right: 10px;\n      box-sizing: border-box;\n    }\n    :host >>> .heatmap-tooltip span,\n    :host >>> .heatmap-tooltip .header strong {\n      white-space: nowrap;\n      overflow: hidden;\n      text-overflow: ellipsis;\n    }\n  "],
@@ -1681,12 +1685,16 @@ CalendarHeatmap.decorators = [
  */
 CalendarHeatmap.ctorParameters = function () { return []; };
 CalendarHeatmap.propDecorators = {
-    'element': [{ type: ViewChild, args: ['root',] },],
-    'data': [{ type: Input },],
-    'color': [{ type: Input },],
-    'overview': [{ type: Input },],
-    'handler': [{ type: Output },],
-    'onResize': [{ type: HostListener, args: ['window:resize', ['$event'],] },],
+    'element': [{ type: _angular_core.ViewChild, args: ['root',] },],
+    'data': [{ type: _angular_core.Input },],
+    'color': [{ type: _angular_core.Input },],
+    'overview': [{ type: _angular_core.Input },],
+    'handler': [{ type: _angular_core.Output },],
+    'onResize': [{ type: _angular_core.HostListener, args: ['window:resize', ['$event'],] },],
 };
 
-export { CalendarHeatmap };
+exports.CalendarHeatmap = CalendarHeatmap;
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+})));

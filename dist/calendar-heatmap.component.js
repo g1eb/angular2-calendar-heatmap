@@ -1,5 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
-
+import { Component, Input, Output, EventEmitter, ViewChild, HostListener } from '@angular/core';
 var CalendarHeatmap = (function () {
     function CalendarHeatmap() {
         this.color = '#ff4500';
@@ -32,7 +31,7 @@ var CalendarHeatmap = (function () {
         // Draw the chart
         this.drawChart();
     };
-    
+    ;
     /**
      * Get hold of the root element and append our svg
      * @return {?}
@@ -56,7 +55,7 @@ var CalendarHeatmap = (function () {
         // Draw the chart
         this.drawChart();
     };
-    
+    ;
     /**
      * Utility function to get number of complete weeks in a year
      * @return {?}
@@ -67,7 +66,7 @@ var CalendarHeatmap = (function () {
         var /** @type {?} */ numWeeks = colIndex + 1;
         return numWeeks;
     };
-    
+    ;
     /**
      * Utility funciton to calculate chart dimensions
      * @return {?}
@@ -79,7 +78,7 @@ var CalendarHeatmap = (function () {
         this.height = this.label_padding + 7 * (this.item_size + this.gutter);
         this.svg.attr({ 'width': this.width, 'height': this.height });
     };
-    
+    ;
     /**
      * Recalculate dimensions on window resize events
      * @param {?} event
@@ -91,7 +90,7 @@ var CalendarHeatmap = (function () {
             this.drawChart();
         }
     };
-    
+    ;
     /**
      * Helper function to check for data summary
      * @return {?}
@@ -148,7 +147,7 @@ var CalendarHeatmap = (function () {
             this.drawDayOverview();
         }
     };
-    
+    ;
     /**
      * Draw global overview (multiple years)
      * @return {?}
@@ -291,20 +290,20 @@ var CalendarHeatmap = (function () {
                     tooltip_html += '<div><span><strong>' + d.summary[i].name + '</strong></span>';
                     tooltip_html += '<span>' + _this.formatTime(d.summary[i].value) + '</span></div>';
                 }
-                
+                ;
             }
             else {
                 for (var /** @type {?} */ i = 0; i < 5; i++) {
                     tooltip_html += '<div><span><strong>' + d.summary[i].name + '</strong></span>';
                     tooltip_html += '<span>' + _this.formatTime(d.summary[i].value) + '</span></div>';
                 }
-                
+                ;
                 tooltip_html += '<br />';
                 var /** @type {?} */ other_projects_sum = 0;
                 for (var /** @type {?} */ i = 5; i < d.summary.length; i++) {
                     other_projects_sum = +d.summary[i].value;
                 }
-                
+                ;
                 tooltip_html += '<div><span><strong>Other:</strong></span>';
                 tooltip_html += '<span>' + _this.formatTime(other_projects_sum) + '</span></div>';
             }
@@ -409,7 +408,7 @@ var CalendarHeatmap = (function () {
             _this.drawChart();
         });
     };
-    
+    ;
     /**
      * Draw year overview
      * @return {?}
@@ -705,7 +704,7 @@ var CalendarHeatmap = (function () {
         // Add button to switch back to previous overview
         this.drawButton();
     };
-    
+    ;
     /**
      * Draw month overview
      * @return {?}
@@ -982,7 +981,7 @@ var CalendarHeatmap = (function () {
         // Add button to switch back to previous overview
         this.drawButton();
     };
-    
+    ;
     /**
      * Draw week overview
      * @return {?}
@@ -1235,7 +1234,7 @@ var CalendarHeatmap = (function () {
         // Add button to switch back to previous overview
         this.drawButton();
     };
-    
+    ;
     /**
      * Draw day overview
      * @return {?}
@@ -1442,7 +1441,7 @@ var CalendarHeatmap = (function () {
         // Add button to switch back to previous overview
         this.drawButton();
     };
-    
+    ;
     /**
      * Helper function to calculate item position on the x-axis
      * @param {?} d object
@@ -1455,7 +1454,7 @@ var CalendarHeatmap = (function () {
         var /** @type {?} */ colIndex = Math.trunc(dayIndex / 7);
         return colIndex * (this.item_size + this.gutter) + this.label_padding;
     };
-    
+    ;
     /**
      * Helper function to calculate item position on the y-axis
      * @param {?} d object
@@ -1464,7 +1463,7 @@ var CalendarHeatmap = (function () {
     CalendarHeatmap.prototype.calcItemY = function (d) {
         return this.label_padding + moment(d.date).weekday() * (this.item_size + this.gutter);
     };
-    
+    ;
     /**
      * Helper function to calculate item size
      * @param {?} d object
@@ -1477,7 +1476,7 @@ var CalendarHeatmap = (function () {
         }
         return this.item_size * 0.75 + (this.item_size * d.total / max) * 0.25;
     };
-    
+    ;
     /**
      * Draw the button for navigation purposes
      * @return {?}
@@ -1531,7 +1530,7 @@ var CalendarHeatmap = (function () {
             .ease('ease-in')
             .style('opacity', 1);
     };
-    
+    ;
     /**
      * Transition and remove items and labels related to global overview
      * @return {?}
@@ -1545,7 +1544,7 @@ var CalendarHeatmap = (function () {
             .remove();
         this.labels.selectAll('.label-year').remove();
     };
-    
+    ;
     /**
      * Transition and remove items and labels related to year overview
      * @return {?}
@@ -1561,7 +1560,7 @@ var CalendarHeatmap = (function () {
         this.labels.selectAll('.label-month').remove();
         this.hideBackButton();
     };
-    
+    ;
     /**
      * Transition and remove items and labels related to month overview
      * @return {?}
@@ -1581,7 +1580,7 @@ var CalendarHeatmap = (function () {
         this.labels.selectAll('.label-week').remove();
         this.hideBackButton();
     };
-    
+    ;
     /**
      * Transition and remove items and labels related to week overview
      * @return {?}
@@ -1601,7 +1600,7 @@ var CalendarHeatmap = (function () {
         this.labels.selectAll('.label-week').remove();
         this.hideBackButton();
     };
-    
+    ;
     /**
      * Transition and remove items and labels related to daily overview
      * @return {?}
@@ -1621,7 +1620,7 @@ var CalendarHeatmap = (function () {
         this.labels.selectAll('.label-project').remove();
         this.hideBackButton();
     };
-    
+    ;
     /**
      * Helper function to hide the tooltip
      * @return {?}
@@ -1632,7 +1631,7 @@ var CalendarHeatmap = (function () {
             .ease('ease-in')
             .style('opacity', 0);
     };
-    
+    ;
     /**
      * Helper function to hide the back button
      * @return {?}
@@ -1645,7 +1644,7 @@ var CalendarHeatmap = (function () {
             .style('opacity', 0)
             .remove();
     };
-    
+    ;
     /**
      * Helper function to convert seconds to a human readable format
      * @param {?} seconds Integer
@@ -1666,9 +1665,10 @@ var CalendarHeatmap = (function () {
         }
         return time;
     };
-    
+    ;
     return CalendarHeatmap;
 }());
+export { CalendarHeatmap };
 CalendarHeatmap.decorators = [
     { type: Component, args: [{
                 selector: 'calendar-heatmap',
@@ -1688,5 +1688,61 @@ CalendarHeatmap.propDecorators = {
     'handler': [{ type: Output },],
     'onResize': [{ type: HostListener, args: ['window:resize', ['$event'],] },],
 };
-
-export { CalendarHeatmap };
+function CalendarHeatmap_tsickle_Closure_declarations() {
+    /** @type {?} */
+    CalendarHeatmap.decorators;
+    /**
+     * @nocollapse
+     * @type {?}
+     */
+    CalendarHeatmap.ctorParameters;
+    /** @type {?} */
+    CalendarHeatmap.propDecorators;
+    /** @type {?} */
+    CalendarHeatmap.prototype.element;
+    /** @type {?} */
+    CalendarHeatmap.prototype.data;
+    /** @type {?} */
+    CalendarHeatmap.prototype.color;
+    /** @type {?} */
+    CalendarHeatmap.prototype.overview;
+    /** @type {?} */
+    CalendarHeatmap.prototype.handler;
+    /** @type {?} */
+    CalendarHeatmap.prototype.gutter;
+    /** @type {?} */
+    CalendarHeatmap.prototype.item_gutter;
+    /** @type {?} */
+    CalendarHeatmap.prototype.width;
+    /** @type {?} */
+    CalendarHeatmap.prototype.height;
+    /** @type {?} */
+    CalendarHeatmap.prototype.item_size;
+    /** @type {?} */
+    CalendarHeatmap.prototype.label_padding;
+    /** @type {?} */
+    CalendarHeatmap.prototype.max_block_height;
+    /** @type {?} */
+    CalendarHeatmap.prototype.transition_duration;
+    /** @type {?} */
+    CalendarHeatmap.prototype.in_transition;
+    /** @type {?} */
+    CalendarHeatmap.prototype.tooltip_width;
+    /** @type {?} */
+    CalendarHeatmap.prototype.tooltip_padding;
+    /** @type {?} */
+    CalendarHeatmap.prototype.history;
+    /** @type {?} */
+    CalendarHeatmap.prototype.selected;
+    /** @type {?} */
+    CalendarHeatmap.prototype.svg;
+    /** @type {?} */
+    CalendarHeatmap.prototype.items;
+    /** @type {?} */
+    CalendarHeatmap.prototype.labels;
+    /** @type {?} */
+    CalendarHeatmap.prototype.buttons;
+    /** @type {?} */
+    CalendarHeatmap.prototype.tooltip;
+}
+//# sourceMappingURL=calendar-heatmap.component.js.map
