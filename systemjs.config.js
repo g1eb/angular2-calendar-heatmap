@@ -50,7 +50,7 @@
       'typescript':                'npm:typescript@2.0.10/lib/typescript.js',
 
       // calendar heatmap
-      'angular2-calendar-heatmap':          'dist/calendar-heatmap.min.js',
+      'angular2-calendar-heatmap':          'dist/calendar-heatmap.js',
 
     },
     // packages tells the System loader how to load when no filename and/or no extension
