@@ -8,38 +8,47 @@
     "type": "git",
     "url": "git+https://github.com/g1eb/angular2-calendar-heatmap.git"
   },
-  "license": "MIT",
-  "main": "index.js",
   "bugs": {
     "url": "https://github.com/g1eb/angular2-calendar-heatmap/issues"
   },
   "scripts": {
-    "build": "npm run build:js",
-    "build:js": "tsc && minify dist/calendar-heatmap.js --output dist/calendar-heatmap.min.js",
-    "build:watch": "tsc -w",
-    "serve": "serve .",
-    "start": "concurrently \"npm run build:watch\" \"npm run serve\""
+    "clean": "rm -rf dist/*",
+    "transpile": "ngc -p tsconfig.json",
+    "bundle:fesm": "rollup -f es dist/calendar-heatmap.component.js -o dist/calendar-heatmap.js",
+    "bundle:umd": "rollup -f umd -n CalendarHeatmap dist/calendar-heatmap.component.js -o dist/calendar-heatmap.umd.js",
+    "build": "npm run clean && npm run transpile && npm run bundle:fesm && npm run bundle:umd"
   },
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
-  "dependencies": {
-    "@angular/core": "~2.4.0",
-    "d3": "^3.5.16",
-    "moment": "^2.13.0"
+  "main": "dist/calendar-heatmap.umd.js",
+  "module": "dist/calendar-heatmap.js",
+  "jsnext:main": "dist/calendar-heatmap.js",
+  "typings": "dist/calendar-heatmap.d.ts",
+  "peerDependencies": {
+    "@angular/core": "^4.0.0",
+    "rxjs": "^5.1.0",
+    "zone.js": "^0.8.4",
+    "moment": "^2.13.0",
+    "d3": "^3.5.16"
   },
   "devDependencies": {
-    "systemjs": "0.19.40",
-    "core-js": "^2.4.1",
-    "zone.js": "^0.7.4",
-    "rxjs": "5.0.1",
-    "@types/d3": "^4.5.0",
-    "@types/node": "^6.0.46",
+    "@angular/compiler": "^4.0.0",
+    "@angular/compiler-cli": "^4.0.0",
+    "@angular/core": "^4.0.0",
+    "@types/d3": "^4.9.0",
+    "@types/node": "^6.0.60",
     "concurrently": "^3.4.0",
+    "core-js": "^2.4.1",
     "cssmin": "^0.4.3",
     "minifier": "^0.8.1",
-    "typescript": "~2.2.0"
+    "rollup": "^0.42.0",
+    "rxjs": "5.1.0",
+    "systemjs": "0.19.40",
+    "typescript": "~2.2.0",
+    "zone.js": "^0.8.4"
   },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "license": "MIT",
   "keywords": [
     "angular",
     "angular2",
