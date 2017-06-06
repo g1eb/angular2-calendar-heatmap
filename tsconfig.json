@@ -1,20 +1,30 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "module": "es2015",
     "outDir": "dist",
-    "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "stripInternal": true,
+    "noImplicitAny": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": [ "es2015", "dom" ],
-    "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true
+    "suppressImplicitAnyIndexErrors": true,
+    "lib": [
+      "es2015",
+      "dom"
+    ]
+  },
+  "angularCompilerOptions": {
+    "strictMetadataEmit": true,
+    "skipTemplateCodegen": true,
+    "annotateForClosureCompiler": true,
+    "flatModuleOutFile": "calendar-heatmap.js",
+    "flatModuleId": "calendar-heatmap"
   },
   "files": [
-    "src/calendar-heatmap.ts"
-  ],
-  "exclude": [
-    "node_modules"
+    "src/calendar-heatmap.component.ts"
   ]
 }
