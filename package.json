@@ -26,8 +26,8 @@
     "@angular/core": "^4.0.0",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.4",
-    "moment": "^2.13.0",
-    "d3": "^3.5.16"
+    "moment": "^2.18.1",
+    "d3": "^4.10.2"
   },
   "devDependencies": {
     "@angular/compiler": "^4.0.0",
