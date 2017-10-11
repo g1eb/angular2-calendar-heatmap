@@ -81,7 +81,7 @@ var CalendarHeatmap = (function () {
         this.width = element.clientWidth < 1000 ? 1000 : element.clientWidth;
         this.item_size = ((this.width - this.label_padding) / this.getNumberOfWeeks() - this.gutter);
         this.height = this.label_padding + 7 * (this.item_size + this.gutter);
-        this.svg.attr({ 'width': this.width, 'height': this.height });
+        this.svg.attr('width', this.width).attr('height', this.height);
     };
     
     /**
@@ -168,7 +168,7 @@ var CalendarHeatmap = (function () {
         var /** @type {?} */ end = moment(this.data[this.data.length - 1]['date']).endOf('year');
         // Define array of years and total values
         var /** @type {?} */ data = this.data;
-        var /** @type {?} */ year_data = d3.time.years(start, end).map(function (d) {
+        var /** @type {?} */ year_data = d3.timeYears(start, end).map(function (d) {
             var /** @type {?} */ date = moment(d);
             return {
                 'date': date,
@@ -211,11 +211,12 @@ var CalendarHeatmap = (function () {
             return d.total;
         });
         // Define year labels and axis
-        var /** @type {?} */ year_labels = d3.time.years(start, end).map(function (d) {
+        var /** @type {?} */ year_labels = d3.timeYears(start, end).map(function (d) {
             return moment(d);
         });
-        var /** @type {?} */ yearScale = d3.scale.ordinal()
-            .rangeRoundBands([0, this.width], 0.05)
+        var /** @type {?} */ yearScale = d3.scaleBand()
+            .rangeRound([0, this.width])
+            .padding([0.05])
             .domain(year_labels.map(function (d) {
             return d.year();
         }));
@@ -236,7 +237,7 @@ var CalendarHeatmap = (function () {
             return 'translate(' + yearScale(d.date.year()) + ',' + _this.tooltip_padding * 2 + ')';
         })
             .attr('fill', function (d) {
-            var /** @type {?} */ color = d3.scale.linear()
+            var /** @type {?} */ color = d3.scaleLinear()
                 .range(['#ffffff', _this.color || '#ff4500'])
                 .domain([-0.15 * max_value, max_value]);
             return color(d.total) || '#ff4500';
@@ -324,7 +325,7 @@ var CalendarHeatmap = (function () {
                 .style('top', y + 'px')
                 .transition()
                 .duration(_this.transition_duration / 2)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', 1);
         })
             .on('mouseout', function () {
@@ -340,7 +341,7 @@ var CalendarHeatmap = (function () {
             .duration(function () {
             return _this.transition_duration;
         })
-            .ease('ease-in')
+            .ease(d3.easeLinear)
             .style('opacity', 1)
             .call(function (transition, callback) {
             if (transition.empty()) {
@@ -349,7 +350,7 @@ var CalendarHeatmap = (function () {
             var /** @type {?} */ n = 0;
             transition
                 .each(function () { ++n; })
-                .each('end', function () {
+                .on('end', function () {
                 if (!--n) {
                     callback.apply(this, arguments);
                 }
@@ -381,7 +382,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-block-year')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', function (d) {
                 return (moment(d.date).year() === year_label.year()) ? 1 : 0.1;
             });
@@ -393,7 +394,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-block-year')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', 1);
         })
             .on('click', function (d) {
@@ -435,7 +436,7 @@ var CalendarHeatmap = (function () {
         var /** @type {?} */ max_value = d3.max(year_data, function (d) {
             return d.total;
         });
-        var /** @type {?} */ color = d3.scale.linear()
+        var /** @type {?} */ color = d3.scaleLinear()
             .range(['#ffffff', this.color])
             .domain([-0.15 * max_value, max_value]);
         this.items.selectAll('.item-circle').remove();
@@ -494,7 +495,7 @@ var CalendarHeatmap = (function () {
             var /** @type {?} */ repeat = function () {
                 circle = circle.transition()
                     .duration(_this.transition_duration)
-                    .ease('ease-in')
+                    .ease(d3.easeLinear)
                     .attr('x', function (d) {
                     return _this.calcItemX(d, start_of_year) - (_this.item_size * 1.1 - _this.item_size) / 2;
                 })
@@ -505,7 +506,7 @@ var CalendarHeatmap = (function () {
                     .attr('height', _this.item_size * 1.1)
                     .transition()
                     .duration(_this.transition_duration)
-                    .ease('ease-in')
+                    .ease(d3.easeLinear)
                     .attr('x', function (d) {
                     return _this.calcItemX(d, start_of_year) + (_this.item_size - _this.calcItemSize(d, max_value)) / 2;
                 })
@@ -518,7 +519,7 @@ var CalendarHeatmap = (function () {
                     .attr('height', function (d) {
                     return _this.calcItemSize(d, max_value);
                 })
-                    .each('end', repeat);
+                    .on('end', repeat);
             };
             repeat();
             // Construct tooltip
@@ -542,7 +543,7 @@ var CalendarHeatmap = (function () {
                 .style('top', y + 'px')
                 .transition()
                 .duration(_this.transition_duration / 2)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', 1);
         })
             .on('mouseout', function () {
@@ -552,7 +553,7 @@ var CalendarHeatmap = (function () {
             // Set circle radius back to what it's supposed to be
             d3.select(d3.event.currentTarget).transition()
                 .duration(_this.transition_duration / 2)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .attr('x', function (d) {
                 return _this.calcItemX(d, start_of_year) + (_this.item_size - _this.calcItemSize(d, max_value)) / 2;
             })
@@ -575,7 +576,7 @@ var CalendarHeatmap = (function () {
             .duration(function () {
             return _this.transition_duration;
         })
-            .ease('ease-in')
+            .ease(d3.easeLinear)
             .style('opacity', 1)
             .call(function (transition, callback) {
             if (transition.empty()) {
@@ -584,7 +585,7 @@ var CalendarHeatmap = (function () {
             var /** @type {?} */ n = 0;
             transition
                 .each(function () { ++n; })
-                .each('end', function () {
+                .on('end', function () {
                 if (!--n) {
                     callback.apply(this, arguments);
                 }
@@ -593,8 +594,8 @@ var CalendarHeatmap = (function () {
             _this.in_transition = false;
         });
         // Add month labels
-        var /** @type {?} */ month_labels = d3.time.months(start_of_year, end_of_year);
-        var /** @type {?} */ monthScale = d3.scale.linear()
+        var /** @type {?} */ month_labels = d3.timeMonths(start_of_year, end_of_year);
+        var /** @type {?} */ monthScale = d3.scaleLinear()
             .range([0, this.width])
             .domain([0, month_labels.length]);
         this.labels.selectAll('.label-month').remove();
@@ -621,7 +622,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-circle')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', function (d) {
                 return moment(d.date).isSame(selected_month, 'month') ? 1 : 0.1;
             });
@@ -633,7 +634,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-circle')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', 1);
         })
             .on('click', function (d) {
@@ -660,9 +661,9 @@ var CalendarHeatmap = (function () {
             _this.drawChart();
         });
         // Add day labels
-        var /** @type {?} */ day_labels = d3.time.days(moment().startOf('week'), moment().endOf('week'));
-        var /** @type {?} */ dayScale = d3.scale.ordinal()
-            .rangeRoundBands([this.label_padding, this.height])
+        var /** @type {?} */ day_labels = d3.timeDays(moment().startOf('week'), moment().endOf('week'));
+        var /** @type {?} */ dayScale = d3.scaleBand()
+            .rangeRound([this.label_padding, this.height])
             .domain(day_labels.map(function (d) {
             return moment(d).weekday();
         }));
@@ -674,7 +675,7 @@ var CalendarHeatmap = (function () {
             .attr('class', 'label label-day')
             .attr('x', this.label_padding / 3)
             .attr('y', function (d, i) {
-            return dayScale(i) + dayScale.rangeBand() / 1.75;
+            return dayScale(i) + dayScale.bandwidth() / 1.75;
         })
             .style('text-anchor', 'left')
             .attr('font-size', function () {
@@ -691,7 +692,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-circle')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', function (d) {
                 return (moment(d.date).day() === selected_day.day()) ? 1 : 0.1;
             });
@@ -703,7 +704,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-circle')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', 1);
         });
         // Add button to switch back to previous overview
@@ -733,9 +734,9 @@ var CalendarHeatmap = (function () {
             });
         });
         // Define day labels and axis
-        var /** @type {?} */ day_labels = d3.time.days(moment().startOf('week'), moment().endOf('week'));
-        var /** @type {?} */ dayScale = d3.scale.ordinal()
-            .rangeRoundBands([this.label_padding, this.height])
+        var /** @type {?} */ day_labels = d3.timeDays(moment().startOf('week'), moment().endOf('week'));
+        var /** @type {?} */ dayScale = d3.scaleBand()
+            .rangeRound([this.label_padding, this.height])
             .domain(day_labels.map(function (d) {
             return moment(d).weekday();
         }));
@@ -744,8 +745,9 @@ var CalendarHeatmap = (function () {
         while (start_of_month.week() !== end_of_month.week()) {
             week_labels.push(start_of_month.add(1, 'week').clone());
         }
-        var /** @type {?} */ weekScale = d3.scale.ordinal()
-            .rangeRoundBands([this.label_padding, this.width], 0.05)
+        var /** @type {?} */ weekScale = d3.scaleBand()
+            .rangeRound([this.label_padding, this.width])
+            .padding([0.05])
             .domain(week_labels.map(function (weekday) {
             return weekday.week();
         }));
@@ -760,10 +762,10 @@ var CalendarHeatmap = (function () {
             return (_this.width - _this.label_padding) / week_labels.length - _this.gutter * 5;
         })
             .attr('height', function () {
-            return Math.min(dayScale.rangeBand(), _this.max_block_height);
+            return Math.min(dayScale.bandwidth(), _this.max_block_height);
         })
             .attr('transform', function (d) {
-            return 'translate(' + weekScale(moment(d.date).week()) + ',' + ((dayScale(moment(d.date).weekday()) + dayScale.rangeBand() / 1.75) - 15) + ')';
+            return 'translate(' + weekScale(moment(d.date).week()) + ',' + ((dayScale(moment(d.date).weekday()) + dayScale.bandwidth() / 1.75) - 15) + ')';
         })
             .attr('total', function (d) {
             return d.total;
@@ -792,7 +794,7 @@ var CalendarHeatmap = (function () {
             _this.drawChart();
         });
         var /** @type {?} */ item_width = (this.width - this.label_padding) / week_labels.length - this.gutter * 5;
-        var /** @type {?} */ itemScale = d3.scale.linear()
+        var /** @type {?} */ itemScale = d3.scaleLinear()
             .rangeRound([0, item_width]);
         var /** @type {?} */ item_gutter = this.item_gutter;
         item_block.selectAll('.item-block-rect')
@@ -815,10 +817,10 @@ var CalendarHeatmap = (function () {
             return Math.max((itemScale(d.value) - item_gutter), 1);
         })
             .attr('height', function () {
-            return Math.min(dayScale.rangeBand(), _this.max_block_height);
+            return Math.min(dayScale.bandwidth(), _this.max_block_height);
         })
             .attr('fill', function (d) {
-            var /** @type {?} */ color = d3.scale.linear()
+            var /** @type {?} */ color = d3.scaleLinear()
                 .range(['#ffffff', _this.color])
                 .domain([-0.15 * max_value, max_value]);
             return color(d.value) || '#ff4500';
@@ -847,7 +849,7 @@ var CalendarHeatmap = (function () {
                 .style('top', y + 'px')
                 .transition()
                 .duration(_this.transition_duration / 2)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', 1);
         })
             .on('mouseout', function () {
@@ -863,7 +865,7 @@ var CalendarHeatmap = (function () {
             .duration(function () {
             return _this.transition_duration;
         })
-            .ease('ease-in')
+            .ease(d3.easeLinear)
             .style('opacity', 1)
             .call(function (transition, callback) {
             if (transition.empty()) {
@@ -872,7 +874,7 @@ var CalendarHeatmap = (function () {
             var /** @type {?} */ n = 0;
             transition
                 .each(function () { ++n; })
-                .each('end', function () {
+                .on('end', function () {
                 if (!--n) {
                     callback.apply(this, arguments);
                 }
@@ -904,7 +906,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-block-month')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', function (d) {
                 return (moment(d.date).week() === weekday.week()) ? 1 : 0.1;
             });
@@ -916,7 +918,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-block-month')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', 1);
         })
             .on('click', function (d) {
@@ -951,7 +953,7 @@ var CalendarHeatmap = (function () {
             .attr('class', 'label label-day')
             .attr('x', this.label_padding / 3)
             .attr('y', function (d, i) {
-            return dayScale(i) + dayScale.rangeBand() / 1.75;
+            return dayScale(i) + dayScale.bandwidth() / 1.75;
         })
             .style('text-anchor', 'left')
             .attr('font-size', function () {
@@ -968,7 +970,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-block-month')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', function (d) {
                 return (moment(d.date).day() === selected_day.day()) ? 1 : 0.1;
             });
@@ -980,7 +982,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-block-month')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', 1);
         });
         // Add button to switch back to previous overview
@@ -1010,16 +1012,17 @@ var CalendarHeatmap = (function () {
             });
         });
         // Define day labels and axis
-        var /** @type {?} */ day_labels = d3.time.days(moment().startOf('week'), moment().endOf('week'));
-        var /** @type {?} */ dayScale = d3.scale.ordinal()
-            .rangeRoundBands([this.label_padding, this.height])
+        var /** @type {?} */ day_labels = d3.timeDays(moment().startOf('week'), moment().endOf('week'));
+        var /** @type {?} */ dayScale = d3.scaleBand()
+            .rangeRound([this.label_padding, this.height])
             .domain(day_labels.map(function (d) {
             return moment(d).weekday();
         }));
         // Define week labels and axis
         var /** @type {?} */ week_labels = [start_of_week];
-        var /** @type {?} */ weekScale = d3.scale.ordinal()
-            .rangeRoundBands([this.label_padding, this.width], 0.01)
+        var /** @type {?} */ weekScale = d3.scaleBand()
+            .rangeRound([this.label_padding, this.width])
+            .padding([0.01])
             .domain(week_labels.map(function (weekday) {
             return weekday.week();
         }));
@@ -1034,10 +1037,10 @@ var CalendarHeatmap = (function () {
             return (_this.width - _this.label_padding) / week_labels.length - _this.gutter * 5;
         })
             .attr('height', function () {
-            return Math.min(dayScale.rangeBand(), _this.max_block_height);
+            return Math.min(dayScale.bandwidth(), _this.max_block_height);
         })
             .attr('transform', function (d) {
-            return 'translate(' + weekScale(moment(d.date).week()) + ',' + ((dayScale(moment(d.date).weekday()) + dayScale.rangeBand() / 1.75) - 15) + ')';
+            return 'translate(' + weekScale(moment(d.date).week()) + ',' + ((dayScale(moment(d.date).weekday()) + dayScale.bandwidth() / 1.75) - 15) + ')';
         })
             .attr('total', function (d) {
             return d.total;
@@ -1066,7 +1069,7 @@ var CalendarHeatmap = (function () {
             _this.drawChart();
         });
         var /** @type {?} */ item_width = (this.width - this.label_padding) / week_labels.length - this.gutter * 5;
-        var /** @type {?} */ itemScale = d3.scale.linear()
+        var /** @type {?} */ itemScale = d3.scaleLinear()
             .rangeRound([0, item_width]);
         var /** @type {?} */ item_gutter = this.item_gutter;
         item_block.selectAll('.item-block-rect')
@@ -1089,10 +1092,10 @@ var CalendarHeatmap = (function () {
             return Math.max((itemScale(d.value) - item_gutter), 1);
         })
             .attr('height', function () {
-            return Math.min(dayScale.rangeBand(), _this.max_block_height);
+            return Math.min(dayScale.bandwidth(), _this.max_block_height);
         })
             .attr('fill', function (d) {
-            var /** @type {?} */ color = d3.scale.linear()
+            var /** @type {?} */ color = d3.scaleLinear()
                 .range(['#ffffff', _this.color])
                 .domain([-0.15 * max_value, max_value]);
             return color(d.value) || '#ff4500';
@@ -1123,7 +1126,7 @@ var CalendarHeatmap = (function () {
                 .style('top', y + 'px')
                 .transition()
                 .duration(_this.transition_duration / 2)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', 1);
         })
             .on('mouseout', function () {
@@ -1139,7 +1142,7 @@ var CalendarHeatmap = (function () {
             .duration(function () {
             return _this.transition_duration;
         })
-            .ease('ease-in')
+            .ease(d3.easeLinear)
             .style('opacity', 1)
             .call(function (transition, callback) {
             if (transition.empty()) {
@@ -1148,7 +1151,7 @@ var CalendarHeatmap = (function () {
             var /** @type {?} */ n = 0;
             transition
                 .each(function () { ++n; })
-                .each('end', function () {
+                .on('end', function () {
                 if (!--n) {
                     callback.apply(this, arguments);
                 }
@@ -1180,7 +1183,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-block-week')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', function (d) {
                 return (moment(d.date).week() === weekday.week()) ? 1 : 0.1;
             });
@@ -1192,7 +1195,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-block-week')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', 1);
         });
         // Add day labels
@@ -1204,7 +1207,7 @@ var CalendarHeatmap = (function () {
             .attr('class', 'label label-day')
             .attr('x', this.label_padding / 3)
             .attr('y', function (d, i) {
-            return dayScale(i) + dayScale.rangeBand() / 1.75;
+            return dayScale(i) + dayScale.bandwidth() / 1.75;
         })
             .style('text-anchor', 'left')
             .attr('font-size', function () {
@@ -1221,7 +1224,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-block-week')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', function (d) {
                 return (moment(d.date).day() === selected_day.day()) ? 1 : 0.1;
             });
@@ -1233,7 +1236,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-block-week')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', 1);
         });
         // Add button to switch back to previous overview
@@ -1257,10 +1260,10 @@ var CalendarHeatmap = (function () {
         var /** @type {?} */ project_labels = this.selected['summary'].map(function (project) {
             return project.name;
         });
-        var /** @type {?} */ projectScale = d3.scale.ordinal()
-            .rangeRoundBands([this.label_padding, this.height])
+        var /** @type {?} */ projectScale = d3.scaleBand()
+            .rangeRound([this.label_padding, this.height])
             .domain(project_labels);
-        var /** @type {?} */ itemScale = d3.time.scale()
+        var /** @type {?} */ itemScale = d3.scaleTime()
             .range([this.label_padding * 2, this.width])
             .domain([moment(this.selected['date']).startOf('day'), moment(this.selected['date']).endOf('day')]);
         this.items.selectAll('.item-block').remove();
@@ -1273,14 +1276,14 @@ var CalendarHeatmap = (function () {
             return itemScale(moment(d.date));
         })
             .attr('y', function (d) {
-            return (projectScale(d.name) + projectScale.rangeBand() / 2) - 15;
+            return (projectScale(d.name) + projectScale.bandwidth() / 2) - 15;
         })
             .attr('width', function (d) {
-            var /** @type {?} */ end = itemScale(d3.time.second.offset(moment(d.date), d.value));
+            var /** @type {?} */ end = itemScale(d3.timeSecond.offset(moment(d.date), d.value));
             return Math.max((end - itemScale(moment(d.date))), 1);
         })
             .attr('height', function () {
-            return Math.min(projectScale.rangeBand(), _this.max_block_height);
+            return Math.min(projectScale.bandwidth(), _this.max_block_height);
         })
             .attr('fill', function () {
             return _this.color;
@@ -1300,14 +1303,14 @@ var CalendarHeatmap = (function () {
             while (_this.width - x < (_this.tooltip_width + _this.tooltip_padding * 3)) {
                 x -= 10;
             }
-            var /** @type {?} */ y = projectScale(d.name) + projectScale.rangeBand() / 2 + _this.tooltip_padding / 2;
+            var /** @type {?} */ y = projectScale(d.name) + projectScale.bandwidth() / 2 + _this.tooltip_padding / 2;
             // Show tooltip
             _this.tooltip.html(tooltip_html)
                 .style('left', x + 'px')
                 .style('top', y + 'px')
                 .transition()
                 .duration(_this.transition_duration / 2)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', 1);
         })
             .on('mouseout', function () {
@@ -1328,7 +1331,7 @@ var CalendarHeatmap = (function () {
             .duration(function () {
             return _this.transition_duration;
         })
-            .ease('ease-in')
+            .ease(d3.easeLinear)
             .style('opacity', 0.5)
             .call(function (transition, callback) {
             if (transition.empty()) {
@@ -1337,7 +1340,7 @@ var CalendarHeatmap = (function () {
             var /** @type {?} */ n = 0;
             transition
                 .each(function () { ++n; })
-                .each('end', function () {
+                .on('end', function () {
                 if (!--n) {
                     callback.apply(this, arguments);
                 }
@@ -1346,8 +1349,8 @@ var CalendarHeatmap = (function () {
             _this.in_transition = false;
         });
         // Add time labels
-        var /** @type {?} */ timeLabels = d3.time.hours(moment(this.selected['date']).startOf('day'), moment(this.selected['date']).endOf('day'));
-        var /** @type {?} */ timeScale = d3.time.scale()
+        var /** @type {?} */ timeLabels = d3.timeHours(moment(this.selected['date']).startOf('day'), moment(this.selected['date']).endOf('day'));
+        var /** @type {?} */ timeScale = d3.scaleTime()
             .range([this.label_padding * 2, this.width])
             .domain([0, timeLabels.length]);
         this.labels.selectAll('.label-time').remove();
@@ -1374,7 +1377,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-block')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', function (d) {
                 var /** @type {?} */ start = itemScale(moment(d.date));
                 var /** @type {?} */ end = itemScale(moment(d.date).add(d.value, 'seconds'));
@@ -1388,7 +1391,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-block')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', 0.5);
         });
         // Add project labels
@@ -1401,10 +1404,10 @@ var CalendarHeatmap = (function () {
             .attr('class', 'label label-project')
             .attr('x', this.gutter)
             .attr('y', function (d) {
-            return projectScale(d) + projectScale.rangeBand() / 2;
+            return projectScale(d) + projectScale.bandwidth() / 2;
         })
             .attr('min-height', function () {
-            return projectScale.rangeBand();
+            return projectScale.bandwidth();
         })
             .style('text-anchor', 'left')
             .attr('font-size', function () {
@@ -1428,7 +1431,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-block')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', function (d) {
                 return (d.name === project) ? 1 : 0.1;
             });
@@ -1440,7 +1443,7 @@ var CalendarHeatmap = (function () {
             _this.items.selectAll('.item-block')
                 .transition()
                 .duration(_this.transition_duration)
-                .ease('ease-in')
+                .ease(d3.easeLinear)
                 .style('opacity', 0.5);
         });
         // Add button to switch back to previous overview
@@ -1532,7 +1535,7 @@ var CalendarHeatmap = (function () {
             .html('&#x2190;');
         button.transition()
             .duration(this.transition_duration)
-            .ease('ease-in')
+            .ease(d3.easeLinear)
             .style('opacity', 1);
     };
     
@@ -1544,7 +1547,7 @@ var CalendarHeatmap = (function () {
         this.items.selectAll('.item-block-year')
             .transition()
             .duration(this.transition_duration)
-            .ease('ease-out')
+            .ease(d3.easeLinear)
             .style('opacity', 0)
             .remove();
         this.labels.selectAll('.label-year').remove();
@@ -1558,7 +1561,7 @@ var CalendarHeatmap = (function () {
         this.items.selectAll('.item-circle')
             .transition()
             .duration(this.transition_duration)
-            .ease('ease')
+            .ease(d3.easeLinear)
             .style('opacity', 0)
             .remove();
         this.labels.selectAll('.label-day').remove();
@@ -1575,7 +1578,7 @@ var CalendarHeatmap = (function () {
         this.items.selectAll('.item-block-month').selectAll('.item-block-rect')
             .transition()
             .duration(this.transition_duration)
-            .ease('ease-in')
+            .ease(d3.easeLinear)
             .style('opacity', 0)
             .attr('x', function (d, i) {
             return (i % 2 === 0) ? -_this.width / 3 : _this.width / 3;
@@ -1595,7 +1598,7 @@ var CalendarHeatmap = (function () {
         this.items.selectAll('.item-block-week').selectAll('.item-block-rect')
             .transition()
             .duration(this.transition_duration)
-            .ease('ease-in')
+            .ease(d3.easeLinear)
             .style('opacity', 0)
             .attr('x', function (d, i) {
             return (i % 2 === 0) ? -_this.width / 3 : _this.width / 3;
@@ -1615,7 +1618,7 @@ var CalendarHeatmap = (function () {
         this.items.selectAll('.item-block')
             .transition()
             .duration(this.transition_duration)
-            .ease('ease-in')
+            .ease(d3.easeLinear)
             .style('opacity', 0)
             .attr('x', function (d, i) {
             return (i % 2 === 0) ? -_this.width / 3 : _this.width / 3;
@@ -1633,7 +1636,7 @@ var CalendarHeatmap = (function () {
     CalendarHeatmap.prototype.hideTooltip = function () {
         this.tooltip.transition()
             .duration(this.transition_duration / 2)
-            .ease('ease-in')
+            .ease(d3.easeLinear)
             .style('opacity', 0);
     };
     
@@ -1645,7 +1648,7 @@ var CalendarHeatmap = (function () {
         this.buttons.selectAll('.button')
             .transition()
             .duration(this.transition_duration)
-            .ease('ease')
+            .ease(d3.easeLinear)
             .style('opacity', 0)
             .remove();
     };
