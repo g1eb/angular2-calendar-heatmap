@@ -20,7 +20,7 @@ export class AppComponent  {
   // Initialize random data for the demo
   private now = moment().endOf('day').toDate();
   private time_ago = moment().startOf('day').subtract(10, 'year').toDate();
-  data = d3.time.days(this.time_ago, this.now).map((dateElement: any, index: number) => {
+  data = d3.timeDays(this.time_ago, this.now).map((dateElement: any, index: number) => {
     return {
       date: dateElement,
       details: Array.apply(null, new Array(Math.floor(Math.random() * 15))).map((e: number, i: number, arr: any) => {
