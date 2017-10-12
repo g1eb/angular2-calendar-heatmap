@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter, ViewChild, HostListener } from '@angular/core';
 
 // Declare global variables
-declare var d3: any;
-declare var moment: any;
+import * as d3 from 'd3';
+import moment from 'moment';
 
 @Component({
   selector: 'calendar-heatmap',
