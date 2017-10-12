@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, ViewChild, HostListener } from '@angular/core';
-// Declare global variables
-import * as d3 from 'd3/index';
+// Import dependencies
 import moment from 'moment';
+import * as d3 from 'd3/index';
 var CalendarHeatmap = /** @class */ (function () {
     function CalendarHeatmap() {
         this.color = '#ff4500';

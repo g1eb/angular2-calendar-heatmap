@@ -1,12 +1,12 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('d3/index'), require('moment')) :
-	typeof define === 'function' && define.amd ? define(['exports', '@angular/core', 'd3/index', 'moment'], factory) :
-	(factory((global.CalendarHeatmap = global.CalendarHeatmap || {}),global._angular_core,global.d3,global.moment));
-}(this, (function (exports,_angular_core,d3,moment) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('moment'), require('d3/index')) :
+	typeof define === 'function' && define.amd ? define(['exports', '@angular/core', 'moment', 'd3/index'], factory) :
+	(factory((global.CalendarHeatmap = global.CalendarHeatmap || {}),global._angular_core,global.moment,global.d3));
+}(this, (function (exports,_angular_core,moment,d3) { 'use strict';
 
 moment = 'default' in moment ? moment['default'] : moment;
 
-// Declare global variables
+// Import dependencies
 var CalendarHeatmap = /** @class */ (function () {
     function CalendarHeatmap() {
         this.color = '#ff4500';
