@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 
-// Declare global variables
-declare var d3: any;
-declare var moment: any;
+// Import dependencies
+import moment from 'moment';
+import * as d3 from 'd3';
 
 @Component({
   selector: 'my-app',
