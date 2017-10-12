@@ -29,13 +29,7 @@ Click <a href="https://rawgit.com/g1eb/angular2-calendar-heatmap/master/" target
 
 ## Installation
 
-1) Install 'angular2-calendar-heatmap' with bower
-
-```
-bower install angular2-calendar-heatmap
-```
-
-Or:
+1) Install 'angular2-calendar-heatmap' with npm
 
 ```
 npm install angular2-calendar-heatmap
