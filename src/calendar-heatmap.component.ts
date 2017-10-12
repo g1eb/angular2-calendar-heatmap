@@ -148,7 +148,7 @@ export class CalendarHeatmap  {
    * Utility function to get number of complete weeks in a year
    */
   getNumberOfWeeks() {
-    var dayIndex = Math.round((moment() - moment().subtract(1, 'year').startOf('week')) / 86400000);
+    var dayIndex = Math.round((+moment() - +moment().subtract(1, 'year').startOf('week')) / 86400000);
     var colIndex = Math.trunc(dayIndex / 7);
     var numWeeks = colIndex + 1;
     return numWeeks;
@@ -241,8 +241,8 @@ export class CalendarHeatmap  {
     }
 
     // Define start and end of the dataset
-    var start = moment(this.data[0]['date']).startOf('year');
-    var end = moment(this.data[this.data.length-1]['date']).endOf('year');
+    var start: any = moment(this.data[0]['date']).startOf('year');
+    var end: any = moment(this.data[this.data.length-1]['date']).endOf('year');
 
     // Define array of years and total values
     var data = this.data;
@@ -295,7 +295,7 @@ export class CalendarHeatmap  {
     });
     var yearScale = d3.scaleBand()
       .rangeRound([0, this.width])
-      .padding([0.05])
+      .padding(0.05)
       .domain(year_labels.map((d: any) => {
         return d.year();
       }));
@@ -317,7 +317,7 @@ export class CalendarHeatmap  {
         return 'translate(' + yearScale(d.date.year()) + ',' + this.tooltip_padding * 2 + ')';
       })
       .attr('fill', (d: any) => {
-        var color = d3.scaleLinear()
+        var color = d3.scaleLinear<string>()
           .range(['#ffffff', this.color || '#ff4500'])
           .domain([-0.15 * max_value, max_value]);
         return color(d.total) || '#ff4500';
@@ -520,7 +520,7 @@ export class CalendarHeatmap  {
       return d.total;
     });
 
-    var color = d3.scaleLinear()
+    var color = d3.scaleLinear<string>()
       .range(['#ffffff', this.color])
       .domain([-0.15 * max_value, max_value]);
 
@@ -579,7 +579,7 @@ export class CalendarHeatmap  {
         // Pulsating animation
         var circle = d3.select(d3.event.currentTarget);
         var repeat = () => {
-          circle = circle.transition()
+          circle.transition()
             .duration(this.transition_duration)
             .ease(d3.easeLinear)
             .attr('x', (d: any) => {
@@ -685,7 +685,7 @@ export class CalendarHeatmap  {
           });
 
     // Add month labels
-    var month_labels = d3.timeMonths(start_of_year, end_of_year);
+    var month_labels = d3.timeMonths(start_of_year.toDate(), end_of_year.toDate());
     var monthScale = d3.scaleLinear()
       .range([0, this.width])
       .domain([0, month_labels.length]);
@@ -754,11 +754,14 @@ export class CalendarHeatmap  {
       });
 
     // Add day labels
-    var day_labels = d3.timeDays(moment().startOf('week'), moment().endOf('week'));
+    var day_labels = d3.timeDays(
+      moment().startOf('week').toDate(),
+      moment().endOf('week').toDate()
+    );
     var dayScale = d3.scaleBand()
       .rangeRound([this.label_padding, this.height])
       .domain(day_labels.map((d: any) => {
-        return moment(d).weekday();
+        return moment(d).weekday().toString();
       }));
     this.labels.selectAll('.label-day').remove();
     this.labels.selectAll('.label-day')
@@ -768,7 +771,7 @@ export class CalendarHeatmap  {
       .attr('class', 'label label-day')
       .attr('x', this.label_padding / 3)
       .attr('y', (d: any, i: number) => {
-        return dayScale(i) + dayScale.bandwidth() / 1.75;
+        return dayScale((i).toString()) + dayScale.bandwidth() / 1.75;
       })
       .style('text-anchor', 'left')
       .attr('font-size', () => {
@@ -821,18 +824,18 @@ export class CalendarHeatmap  {
     var month_data = this.data.filter((d: any) => {
       return start_of_month <= moment(d.date) && moment(d.date) < end_of_month;
     });
-    var max_value = d3.max(month_data, (d: any) => {
+    var max_value: number = d3.max(month_data, (d: any) => {
       return d3.max(d.summary, (d: any) => {
-        return d.value;
+        return +d.value;
       });
     });
 
     // Define day labels and axis
-    var day_labels = d3.timeDays(moment().startOf('week'), moment().endOf('week'));
+    var day_labels = d3.timeDays(moment().startOf('week').toDate(), moment().endOf('week').toDate());
     var dayScale = d3.scaleBand()
       .rangeRound([this.label_padding, this.height])
       .domain(day_labels.map((d: any) => {
-        return moment(d).weekday();
+        return moment(d).weekday().toString();
       }));
 
     // Define week labels and axis
@@ -842,9 +845,9 @@ export class CalendarHeatmap  {
     }
     var weekScale = d3.scaleBand()
       .rangeRound([this.label_padding, this.width])
-      .padding([0.05])
+      .padding(0.05)
       .domain(week_labels.map((weekday) => {
-        return weekday.week();
+        return weekday.week().toString();
       }));
 
     // Add month data items to the overview
@@ -861,7 +864,7 @@ export class CalendarHeatmap  {
         return Math.min(dayScale.bandwidth(), this.max_block_height);
       })
       .attr('transform', (d: any) => {
-        return 'translate(' + weekScale(moment(d.date).week()) + ',' + ((dayScale(moment(d.date).weekday()) + dayScale.bandwidth() / 1.75) - 15)+ ')';
+        return 'translate(' + weekScale(moment(d.date).week().toString()) + ',' + ((dayScale(moment(d.date).weekday().toString()) + dayScale.bandwidth() / 1.75) - 15) + ')';
       })
       .attr('total', (d: any) => {
         return d.total;
@@ -920,7 +923,7 @@ export class CalendarHeatmap  {
         return Math.min(dayScale.bandwidth(), this.max_block_height);
       })
       .attr('fill', (d: any) => {
-        var color = d3.scaleLinear()
+        var color = d3.scaleLinear<string>()
           .range(['#ffffff', this.color])
           .domain([-0.15 * max_value, max_value]);
         return color(d.value) || '#ff4500';
@@ -939,11 +942,11 @@ export class CalendarHeatmap  {
         tooltip_html += '<div>on ' + moment(date).format('dddd, MMM Do YYYY') + '</div>';
 
         // Calculate tooltip position
-        var x = weekScale(moment(date).week()) + this.tooltip_padding;
+        var x = weekScale(moment(date).week().toString()) + this.tooltip_padding;
         while ( this.width - x < (this.tooltip_width + this.tooltip_padding * 3) ) {
           x -= 10;
         }
-        var y = dayScale(moment(date).weekday()) + this.tooltip_padding * 2;
+        var y = dayScale(moment(date).weekday().toString()) + this.tooltip_padding * 2;
 
         // Show tooltip
         this.tooltip.html(tooltip_html)
@@ -1109,25 +1112,25 @@ export class CalendarHeatmap  {
     var week_data = this.data.filter((d: any) => {
       return start_of_week <= moment(d.date) && moment(d.date) < end_of_week;
     });
-    var max_value = d3.max(week_data, (d: any) => {
+    var max_value: number = d3.max(week_data, (d: any) => {
       return d3.max(d.summary, (d: any) => {
-        return d.value;
+        return +d.value;
       });
     });
 
     // Define day labels and axis
-    var day_labels = d3.timeDays(moment().startOf('week'), moment().endOf('week'));
+    var day_labels = d3.timeDays(moment().startOf('week').toDate(), moment().endOf('week').toDate());
     var dayScale = d3.scaleBand()
       .rangeRound([this.label_padding, this.height])
       .domain(day_labels.map((d: any) => {
-        return moment(d).weekday();
+        return moment(d).weekday().toString();
       }));
 
     // Define week labels and axis
     var week_labels = [start_of_week];
     var weekScale = d3.scaleBand()
       .rangeRound([this.label_padding, this.width])
-      .padding([0.01])
+      .padding(0.01)
       .domain(week_labels.map((weekday: any) => {
         return weekday.week();
       }));
@@ -1146,7 +1149,7 @@ export class CalendarHeatmap  {
         return Math.min(dayScale.bandwidth(), this.max_block_height);
       })
       .attr('transform', (d: any) => {
-        return 'translate(' + weekScale(moment(d.date).week()) + ',' + ((dayScale(moment(d.date).weekday()) + dayScale.bandwidth() / 1.75) - 15)+ ')';
+        return 'translate(' + weekScale(moment(d.date).week().toString()) + ',' + ((dayScale(moment(d.date).weekday().toString()) + dayScale.bandwidth() / 1.75) - 15)+ ')';
       })
       .attr('total', (d: any) => {
         return d.total;
@@ -1205,7 +1208,7 @@ export class CalendarHeatmap  {
         return Math.min(dayScale.bandwidth(), this.max_block_height);
       })
       .attr('fill', (d: any) => {
-        var color = d3.scaleLinear()
+        var color = d3.scaleLinear<string>()
           .range(['#ffffff', this.color])
           .domain([-0.15 * max_value, max_value]);
         return color(d.value) || '#ff4500';
@@ -1230,7 +1233,7 @@ export class CalendarHeatmap  {
         while ( this.width - x < (this.tooltip_width + this.tooltip_padding * 3) ) {
           x -= 10;
         }
-        var y = dayScale(moment(date).weekday()) + this.tooltip_padding * 1.5;
+        var y = dayScale(moment(date).weekday().toString()) + this.tooltip_padding * 1.5;
 
         // Show tooltip
         this.tooltip.html(tooltip_html)
@@ -1317,7 +1320,7 @@ export class CalendarHeatmap  {
       .attr('class', 'label label-day')
       .attr('x', this.label_padding / 3)
       .attr('y', (d: any, i: number) => {
-        return dayScale(i) + dayScale.bandwidth() / 1.75;
+        return dayScale((i).toString()) + dayScale.bandwidth() / 1.75;
       })
       .style('text-anchor', 'left')
       .attr('font-size', () => {
@@ -1390,7 +1393,7 @@ export class CalendarHeatmap  {
         return (projectScale(d.name) + projectScale.bandwidth() / 2) - 15;
       })
       .attr('width', (d: any) => {
-        var end = itemScale(d3.timeSecond.offset(moment(d.date), d.value));
+        var end = itemScale(d3.timeSecond.offset(moment(d.date).toDate(), d.value));
         return Math.max((end - itemScale(moment(d.date))), 1);
       })
       .attr('height', () => {
@@ -1461,8 +1464,8 @@ export class CalendarHeatmap  {
 
     // Add time labels
     var timeLabels = d3.timeHours(
-      moment(this.selected['date']).startOf('day'),
-      moment(this.selected['date']).endOf('day')
+      moment(this.selected['date']).startOf('day').toDate(),
+      moment(this.selected['date']).endOf('day').toDate()
     );
     var timeScale = d3.scaleTime()
       .range([this.label_padding * 2, this.width])
@@ -1571,7 +1574,7 @@ export class CalendarHeatmap  {
    */
   calcItemX(d: any, start_of_year: any) {
     var date = moment(d.date);
-    var dayIndex = Math.round((date - moment(start_of_year).startOf('week')) / 86400000);
+    var dayIndex = Math.round((+date - +moment(start_of_year).startOf('week')) / 86400000);
     var colIndex = Math.trunc(dayIndex / 7);
     return colIndex * (this.item_size + this.gutter) + this.label_padding;
   };
