@@ -14,8 +14,8 @@
   "scripts": {
     "clean": "rm -rf dist/*",
     "transpile": "ngc -p tsconfig.json",
-    "bundle:fesm": "rollup -f es dist/calendar-heatmap.component.js -o dist/calendar-heatmap.js",
-    "bundle:umd": "rollup -f umd -n CalendarHeatmap dist/calendar-heatmap.component.js -o dist/calendar-heatmap.umd.js",
+    "bundle:fesm": "rollup -f es -e @angular/core -g @angular/core:_angular_core,moment:moment,d3/index:d3 dist/calendar-heatmap.component.js -o dist/calendar-heatmap.js",
+    "bundle:umd": "rollup -f umd -n CalendarHeatmap -e @angular/core -g @angular/core:_angular_core,moment:moment,d3/index:d3 dist/calendar-heatmap.component.js -o dist/calendar-heatmap.umd.js",
     "build": "npm run clean && npm run transpile && npm run bundle:fesm && npm run bundle:umd"
   },
   "main": "dist/calendar-heatmap.umd.js",
