@@ -53,7 +53,7 @@
       'moment': 'npm:moment@2.19.1/min/moment.min.js',
 
       // d3
-      'd3': 'https://unpkg.com/d3@4.11.0/build/d3.min.js',
+      'd3': 'npm:d3@4.11.0/build/d3.min.js',
 
       // calendar heatmap
       'angular2-calendar-heatmap':          'src/calendar-heatmap.component.ts',
