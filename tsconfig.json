@@ -23,7 +23,7 @@
     "skipTemplateCodegen": true,
     "annotateForClosureCompiler": true,
     "flatModuleOutFile": "calendar-heatmap.js",
-    "flatModuleId": "calendar-heatmap"
+    "flatModuleId": "angular2-calendar-heatmap"
   },
   "files": [
     "src/calendar-heatmap.component.ts"
