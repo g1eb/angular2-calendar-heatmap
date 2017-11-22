@@ -1,13 +1,13 @@
 # Angular component for D3.js Calendar Heatmap
 
-This [d3.js](https://d3js.org/) heatmap representing time series data is used to visualize tracked time over the past year, showing details for each of the days on demand. Converted into an angular component for your convenience :)  
+This [d3.js](https://d3js.org/) heatmap representing time series data is used to visualize tracked time over the past year, showing details for each of the days on demand. Converted into an angular component for your convenience :)
 
 Includes a global overview of multiple years and visualizations of year, month, week and day overview with zoom for details-on-demand.
 
-Inspired by Github's contribution chart.
+Inspired by [Github's contribution graph](https://help.github.com/articles/viewing-contributions-on-your-profile/#contributions-calendar)
 
-Based on [D3.js Calendar Heatmap](https://github.com/DKirwan/calendar-heatmap) by [Darragh Kirwan](https://github.com/DKirwan)  
-Aaand [Calendar View](https://bl.ocks.org/mbostock/4063318) by [Mike Bostock](https://github.com/mbostock)
+Based on [Calendar View](https://bl.ocks.org/mbostock/4063318) by [Mike Bostock](https://github.com/mbostock)
+Aaand [D3.js Calendar Heatmap](https://github.com/DKirwan/calendar-heatmap) by [Darragh Kirwan](https://github.com/DKirwan)
 
 ## Demo
 Click <a href="https://rawgit.com/g1eb/angular2-calendar-heatmap/master/" target="_blank">here</a> for a live demo.
@@ -66,7 +66,7 @@ declarations: [ ...... , CalendarHeatmap ],
 
 ### Example data
 
-Time series data where each day has a total time tracked (in seconds).  
+Time series data where each day has a total time tracked (in seconds).
 Details, if provided, are shown in a tooltip on mouseover in different overviews.
 
 ```
