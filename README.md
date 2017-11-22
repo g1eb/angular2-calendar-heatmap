@@ -119,7 +119,7 @@ var data = [{
 
 See [index.html](https://github.com/g1eb/angular2-calendar-heatmap/blob/master/index.html) for an example implementation with random data or click <a href="https://rawgit.com/g1eb/angular2-calendar-heatmap/master/" target="_blank">here</a> for a live demo.
 
-## AngularJS directive
+## Angular directive
 
 If you want to use this heatmap as an AngularJS directive (version 1.x), see [angular-calendar-heatmap](https://github.com/g1eb/angular-calendar-heatmap)
 
