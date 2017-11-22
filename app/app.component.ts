@@ -25,7 +25,7 @@ export class AppComponent  {
       date: dateElement,
       details: Array.apply(null, new Array(Math.floor(Math.random() * 15))).map((e: number, i: number, arr: any) => {
         return {
-          'name': 'Project ' + Math.round(Math.random() * 10),
+          'name': 'Project ' + Math.ceil(Math.random() * 10),
           'date': function () {
             var projectDate = new Date(dateElement.getTime());
             projectDate.setHours(Math.floor(Math.random() * 24))
