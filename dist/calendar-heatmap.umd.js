@@ -223,7 +223,7 @@ var CalendarHeatmap = /** @class */ (function () {
             .domain(year_labels.map(function (d) {
             return d.year();
         }));
-        // Add month data items to the overview
+        // Add global data items to the overview
         this.items.selectAll('.item-block-year').remove();
         var /** @type {?} */ item_block = this.items.selectAll('.item-block-year')
             .data(year_data)
@@ -255,7 +255,7 @@ var CalendarHeatmap = /** @class */ (function () {
             _this.selected = d;
             // Hide tooltip
             _this.hideTooltip();
-            // Remove all month overview related items and labels
+            // Remove all global overview related items and labels
             _this.removeGlobalOverview();
             // Redraw the chart
             _this.overview = 'year';
@@ -406,11 +406,11 @@ var CalendarHeatmap = /** @class */ (function () {
             }
             // Set in_transition flag
             _this.in_transition = true;
-            // Set selected month to the one clicked on
-            _this.selected = d;
+            // Set selected year to the one clicked on
+            _this.selected = { date: d };
             // Hide tooltip
             _this.hideTooltip();
-            // Remove all year overview related items and labels
+            // Remove all global overview related items and labels
             _this.removeGlobalOverview();
             // Redraw the chart
             _this.overview = 'year';
