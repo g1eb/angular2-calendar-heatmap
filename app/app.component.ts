@@ -11,7 +11,8 @@ import * as d3 from 'd3';
       [data]="data"
       [color]="color"
       [overview]="overview"
-      (handler)="print($event)">
+      (handler)="print($event)"
+      (onChange)="handleOnChange($event)">
     </calendar-heatmap>
   `,
 })
@@ -50,8 +51,13 @@ export class AppComponent  {
   // Set overview type (choices are year, month and day)
   overview = 'year';
 
-  // Handler function
+  // Click handler function
   print(val: object):void {
     console.log(val);
+  }
+
+  // On change handler
+  handleOnChange(val: object):void {
+    console.log('onChange', val)
   }
 }
