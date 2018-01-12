@@ -5,6 +5,7 @@ export declare class CalendarHeatmap {
     color: string;
     overview: string;
     handler: EventEmitter<object>;
+    onChange: EventEmitter<object>;
     private gutter;
     private item_gutter;
     private width;

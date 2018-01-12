@@ -12,6 +12,7 @@ var CalendarHeatmap = /** @class */ (function () {
         this.color = '#ff4500';
         this.overview = 'global';
         this.handler = new _angular_core.EventEmitter();
+        this.onChange = new _angular_core.EventEmitter();
         this.gutter = 5;
         this.item_gutter = 1;
         this.width = 1000;
@@ -144,15 +145,35 @@ var CalendarHeatmap = /** @class */ (function () {
         }
         else if (this.overview === 'year') {
             this.drawYearOverview();
+            this.onChange.emit({
+                overview: this.overview,
+                start: moment(this.selected['date']).startOf('year'),
+                end: moment(this.selected['date']).endOf('year'),
+            });
         }
         else if (this.overview === 'month') {
             this.drawMonthOverview();
+            this.onChange.emit({
+                overview: this.overview,
+                start: moment(this.selected['date']).startOf('month'),
+                end: moment(this.selected['date']).endOf('month'),
+            });
         }
         else if (this.overview === 'week') {
             this.drawWeekOverview();
+            this.onChange.emit({
+                overview: this.overview,
+                start: moment(this.selected['date']).startOf('week'),
+                end: moment(this.selected['date']).endOf('week'),
+            });
         }
         else if (this.overview === 'day') {
             this.drawDayOverview();
+            this.onChange.emit({
+                overview: this.overview,
+                start: moment(this.selected['date']).startOf('day'),
+                end: moment(this.selected['date']).endOf('day'),
+            });
         }
     };
     
@@ -1694,6 +1715,7 @@ var CalendarHeatmap = /** @class */ (function () {
         'color': [{ type: _angular_core.Input },],
         'overview': [{ type: _angular_core.Input },],
         'handler': [{ type: _angular_core.Output },],
+        'onChange': [{ type: _angular_core.Output },],
         'onResize': [{ type: _angular_core.HostListener, args: ['window:resize', ['$event'],] },],
     };
     return CalendarHeatmap;
