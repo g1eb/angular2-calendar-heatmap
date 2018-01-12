@@ -73,6 +73,7 @@ export class CalendarHeatmap  {
   @Input() overview: string = 'global';
 
   @Output() handler: EventEmitter<object> = new EventEmitter<object>();
+  @Output() onChange: EventEmitter<object> = new EventEmitter<object>();
 
   // Defaults
   private gutter: number = 5;
