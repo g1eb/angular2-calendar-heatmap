@@ -222,12 +222,32 @@ export class CalendarHeatmap  {
       this.drawGlobalOverview();
     } else if ( this.overview === 'year' ) {
       this.drawYearOverview();
+      this.onChange.emit({
+        overview: this.overview,
+        start: moment(this.selected['date']).startOf('year'),
+        end: moment(this.selected['date']).endOf('year'),
+      })
     } else if ( this.overview === 'month' ) {
       this.drawMonthOverview();
+      this.onChange.emit({
+        overview: this.overview,
+        start: moment(this.selected['date']).startOf('month'),
+        end: moment(this.selected['date']).endOf('month'),
+      })
     } else if ( this.overview === 'week' ) {
       this.drawWeekOverview();
+      this.onChange.emit({
+        overview: this.overview,
+        start: moment(this.selected['date']).startOf('week'),
+        end: moment(this.selected['date']).endOf('week'),
+      })
     } else if ( this.overview === 'day' ) {
       this.drawDayOverview();
+      this.onChange.emit({
+        overview: this.overview,
+        start: moment(this.selected['date']).startOf('day'),
+        end: moment(this.selected['date']).endOf('day'),
+      })
     }
   };
 
