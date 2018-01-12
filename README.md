@@ -63,6 +63,7 @@ declarations: [ ...... , CalendarHeatmap ],
 | color | Theme hex color | #45ff00 | no |
 | overview | Initial overview type (choices are: year, month, day) | year | no |
 | handler | Handler function is fired on click of a time entry in daily overview | none | no |
+| onChange | Handler function is fired on change of the overview | none | no |
 
 ### Example data
 
