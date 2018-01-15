@@ -142,6 +142,11 @@ var CalendarHeatmap = /** @class */ (function () {
         }
         if (this.overview === 'global') {
             this.drawGlobalOverview();
+            this.onChange.emit({
+                overview: this.overview,
+                start: moment(this.data[0]['date']),
+                end: moment(this.data[this.data.length - 1]['date']),
+            });
         }
         else if (this.overview === 'year') {
             this.drawYearOverview();
