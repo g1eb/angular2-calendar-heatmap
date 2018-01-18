@@ -426,7 +426,7 @@ export class CalendarHeatmap  {
         while ( this.width - x < (this.tooltip_width + this.tooltip_padding * 5) ) {
           x -= 10;
         }
-        var y = this.tooltip_padding * 3;
+        var y = this.tooltip_padding * 4;
 
         // Show tooltip
         this.tooltip.html(tooltip_html)
@@ -649,11 +649,11 @@ export class CalendarHeatmap  {
         });
 
         // Calculate tooltip position
-        var x = this.calcItemX(d, start_of_year) + this.item_size;
+        var x = this.calcItemX(d, start_of_year) + this.item_size / 2;
         if ( this.width - x < (this.tooltip_width + this.tooltip_padding * 3) ) {
           x -= this.tooltip_width + this.tooltip_padding * 2;
         }
-        var y = this.calcItemY(d) + this.item_size;
+        var y = this.calcItemY(d) + this.item_size / 2;
 
         // Show tooltip
         this.tooltip.html(tooltip_html)
@@ -974,7 +974,7 @@ export class CalendarHeatmap  {
         while ( this.width - x < (this.tooltip_width + this.tooltip_padding * 3) ) {
           x -= 10;
         }
-        var y = dayScale(moment(date).weekday().toString()) + this.tooltip_padding * 2;
+        var y = dayScale(moment(date).weekday().toString()) + this.tooltip_padding;
 
         // Show tooltip
         this.tooltip.html(tooltip_html)
@@ -1257,11 +1257,11 @@ export class CalendarHeatmap  {
         // Calculate tooltip position
         var total = parseInt(d3.select(d3.event.currentTarget.parentNode).attr('total'));
         itemScale.domain([0, total]);
-        var x = parseInt(d3.select(d3.event.currentTarget).attr('x')) + itemScale(d.value) / 4 + this.tooltip_width / 4;
+        var x = parseInt(d3.select(d3.event.currentTarget).attr('x')) + this.tooltip_padding * 5;
         while ( this.width - x < (this.tooltip_width + this.tooltip_padding * 3) ) {
           x -= 10;
         }
-        var y = dayScale(moment(date).weekday().toString()) + this.tooltip_padding * 1.5;
+        var y = dayScale(moment(date).weekday().toString()) + this.tooltip_padding;
 
         // Show tooltip
         this.tooltip.html(tooltip_html)
@@ -1445,7 +1445,7 @@ export class CalendarHeatmap  {
         while ( this.width - x < (this.tooltip_width + this.tooltip_padding * 3) ) {
           x -= 10;
         }
-        var y = projectScale(d.name) + projectScale.bandwidth() / 2 + this.tooltip_padding / 2;
+        var y = projectScale(d.name) + this.tooltip_padding;
 
         // Show tooltip
         this.tooltip.html(tooltip_html)
