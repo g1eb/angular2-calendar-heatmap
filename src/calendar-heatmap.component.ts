@@ -9,6 +9,7 @@ import * as d3 from 'd3';
   template: `<div #root></div>`,
   styles: [`
     :host {
+      position: relative;
       user-select: none;
       -ms-user-select: none;
       -moz-user-select: none;
