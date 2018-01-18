@@ -347,7 +347,7 @@ var CalendarHeatmap = /** @class */ (function () {
             while (_this.width - x < (_this.tooltip_width + _this.tooltip_padding * 5)) {
                 x -= 10;
             }
-            var /** @type {?} */ y = _this.tooltip_padding * 3;
+            var /** @type {?} */ y = _this.tooltip_padding * 4;
             // Show tooltip
             _this.tooltip.html(tooltip_html)
                 .style('left', x + 'px')
@@ -561,11 +561,11 @@ var CalendarHeatmap = /** @class */ (function () {
                 tooltip_html += '<span>' + _this.formatTime(d.value) + '</span></div>';
             });
             // Calculate tooltip position
-            var /** @type {?} */ x = _this.calcItemX(d, start_of_year) + _this.item_size;
+            var /** @type {?} */ x = _this.calcItemX(d, start_of_year) + _this.item_size / 2;
             if (_this.width - x < (_this.tooltip_width + _this.tooltip_padding * 3)) {
                 x -= _this.tooltip_width + _this.tooltip_padding * 2;
             }
-            var /** @type {?} */ y = _this.calcItemY(d) + _this.item_size;
+            var /** @type {?} */ y = _this.calcItemY(d) + _this.item_size / 2;
             // Show tooltip
             _this.tooltip.html(tooltip_html)
                 .style('left', x + 'px')
@@ -871,7 +871,7 @@ var CalendarHeatmap = /** @class */ (function () {
             while (_this.width - x < (_this.tooltip_width + _this.tooltip_padding * 3)) {
                 x -= 10;
             }
-            var /** @type {?} */ y = dayScale(moment(date).weekday().toString()) + _this.tooltip_padding * 2;
+            var /** @type {?} */ y = dayScale(moment(date).weekday().toString()) + _this.tooltip_padding;
             // Show tooltip
             _this.tooltip.html(tooltip_html)
                 .style('left', x + 'px')
@@ -1144,11 +1144,11 @@ var CalendarHeatmap = /** @class */ (function () {
             // Calculate tooltip position
             var /** @type {?} */ total = parseInt(d3.select(d3.event.currentTarget.parentNode).attr('total'));
             itemScale.domain([0, total]);
-            var /** @type {?} */ x = parseInt(d3.select(d3.event.currentTarget).attr('x')) + itemScale(d.value) / 4 + _this.tooltip_width / 4;
+            var /** @type {?} */ x = parseInt(d3.select(d3.event.currentTarget).attr('x')) + _this.tooltip_padding * 5;
             while (_this.width - x < (_this.tooltip_width + _this.tooltip_padding * 3)) {
                 x -= 10;
             }
-            var /** @type {?} */ y = dayScale(moment(date).weekday().toString()) + _this.tooltip_padding * 1.5;
+            var /** @type {?} */ y = dayScale(moment(date).weekday().toString()) + _this.tooltip_padding;
             // Show tooltip
             _this.tooltip.html(tooltip_html)
                 .style('left', x + 'px')
@@ -1332,7 +1332,7 @@ var CalendarHeatmap = /** @class */ (function () {
             while (_this.width - x < (_this.tooltip_width + _this.tooltip_padding * 3)) {
                 x -= 10;
             }
-            var /** @type {?} */ y = projectScale(d.name) + projectScale.bandwidth() / 2 + _this.tooltip_padding / 2;
+            var /** @type {?} */ y = projectScale(d.name) + _this.tooltip_padding;
             // Show tooltip
             _this.tooltip.html(tooltip_html)
                 .style('left', x + 'px')
@@ -1707,7 +1707,7 @@ var CalendarHeatmap = /** @class */ (function () {
         { type: _angular_core.Component, args: [{
                     selector: 'calendar-heatmap',
                     template: "<div #root></div>",
-                    styles: ["\n    :host {\n      user-select: none;\n      -ms-user-select: none;\n      -moz-user-select: none;\n      -webkit-user-select: none;\n    }\n    :host >>> .item {\n      cursor: pointer;\n    }\n    :host >>> .label {\n      cursor: pointer;\n      fill: rgb(170, 170, 170);\n      font-family: Helvetica, arial, 'Open Sans', sans-serif;\n    }\n    :host >>> .button {\n      cursor: pointer;\n      fill: transparent;\n      stroke-width: 2;\n      stroke: rgb(170, 170, 170);\n    }\n    :host >>> .button text {\n      stroke-width: 1;\n      text-anchor: middle;\n      fill: rgb(170, 170, 170);\n    }\n    :host >>> .heatmap-tooltip {\n      pointer-events: none;\n      position: absolute;\n      z-index: 9999;\n      width: 250px;\n      max-width: 250px;\n      overflow: hidden;\n      padding: 15px;\n      font-size: 12px;\n      line-height: 14px;\n      color: rgb(51, 51, 51);\n      font-family: Helvetica, arial, 'Open Sans', sans-serif;\n      background: rgba(255, 255, 255, 0.75);\n    }\n    :host >>> .heatmap-tooltip .header strong {\n      display: inline-block;\n      width: 250px;\n    }\n    :host >>> .heatmap-tooltip span {\n      display: inline-block;\n      width: 50%;\n      padding-right: 10px;\n      box-sizing: border-box;\n    }\n    :host >>> .heatmap-tooltip span,\n    :host >>> .heatmap-tooltip .header strong {\n      white-space: nowrap;\n      overflow: hidden;\n      text-overflow: ellipsis;\n    }\n  "],
+                    styles: ["\n    :host {\n      position: relative;\n      user-select: none;\n      -ms-user-select: none;\n      -moz-user-select: none;\n      -webkit-user-select: none;\n    }\n    :host >>> .item {\n      cursor: pointer;\n    }\n    :host >>> .label {\n      cursor: pointer;\n      fill: rgb(170, 170, 170);\n      font-family: Helvetica, arial, 'Open Sans', sans-serif;\n    }\n    :host >>> .button {\n      cursor: pointer;\n      fill: transparent;\n      stroke-width: 2;\n      stroke: rgb(170, 170, 170);\n    }\n    :host >>> .button text {\n      stroke-width: 1;\n      text-anchor: middle;\n      fill: rgb(170, 170, 170);\n    }\n    :host >>> .heatmap-tooltip {\n      pointer-events: none;\n      position: absolute;\n      z-index: 9999;\n      width: 250px;\n      max-width: 250px;\n      overflow: hidden;\n      padding: 15px;\n      font-size: 12px;\n      line-height: 14px;\n      color: rgb(51, 51, 51);\n      font-family: Helvetica, arial, 'Open Sans', sans-serif;\n      background: rgba(255, 255, 255, 0.75);\n    }\n    :host >>> .heatmap-tooltip .header strong {\n      display: inline-block;\n      width: 250px;\n    }\n    :host >>> .heatmap-tooltip span {\n      display: inline-block;\n      width: 50%;\n      padding-right: 10px;\n      box-sizing: border-box;\n    }\n    :host >>> .heatmap-tooltip span,\n    :host >>> .heatmap-tooltip .header strong {\n      white-space: nowrap;\n      overflow: hidden;\n      text-overflow: ellipsis;\n    }\n  "],
                 },] },
     ];
     /**
