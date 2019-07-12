@@ -33,7 +33,7 @@
   "devDependencies": {
     "@angular/compiler": "^4.0.0",
     "@angular/compiler-cli": "^4.0.0",
-    "@angular/core": "^4.0.0",
+    "@angular/core": "^4.4.7",
     "@types/d3": "^4.11.0",
     "@types/node": "^6.0.60",
     "concurrently": "^3.4.0",
@@ -41,10 +41,9 @@
     "cssmin": "^0.4.3",
     "minifier": "^0.8.1",
     "rollup": "^0.42.0",
-    "rxjs": "5.1.0",
     "systemjs": "0.19.40",
     "typescript": "^2.5.3",
-    "zone.js": "^0.8.4"
+    "zone.js": "^0.8.29"
   },
   "engines": {
     "node": ">=6.0.0"
@@ -64,5 +63,11 @@
     "d3js",
     "d3"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "d3": "^4.13.0",
+    "lodash": "^4.17.14",
+    "moment": "^2.24.0",
+    "rxjs": "^5.5.12",
+    "rxjs-compat": "^6.5.2"
+  }
 }
