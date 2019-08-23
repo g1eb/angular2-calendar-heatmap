@@ -1,12 +1,12 @@
 // Import dependencies
 import { Component, Input, Output, EventEmitter, ViewChild, HostListener, ElementRef } from '@angular/core';
-import { UnaryFunction } from 'rxjs/interfaces';
 import moment, { Moment } from 'moment';
 import * as d3 from 'd3';
 
-export enum OverviewType { 'global', 'year', 'month', 'week', 'day' };
+export declare type UnaryFunction<T, R> = (source: T) => R;
+export enum OverviewType { global,  year,  month,  week,  day };
 export interface CalendarHeatmapItem {
-  date: Date;
+  date?: Date;
 }
 export interface CalendarHeatmapChangeEvent {
   overview: OverviewType;
@@ -276,7 +276,7 @@ export class CalendarHeatmap {
 
   // Overview defaults
   private history: OverviewType[] = [OverviewType.global];
-  private selected: CalendarHeatmapData;
+  private selected: CalendarHeatmapData = {};
 
   // D3 related variables
   private svg: any;
