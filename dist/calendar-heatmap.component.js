@@ -21,7 +21,7 @@ var CalendarHeatmap = /** @class */ (function () {
         this.overview = OverviewType.global;
         /**
          * Helper function to convert seconds to a human readable format
-        \@param seconds Integer
+         * @param seconds Integer
          */
         this.formatTime = function (seconds) {
             var hours = Math.floor(seconds / 3600);
@@ -1539,8 +1539,7 @@ var CalendarHeatmap = /** @class */ (function () {
     ;
     /**
      * Helper function to calculate item position on the x-axis
-    \@param d object
-     * @param {?} d
+     * @param {?} d object
      * @param {?} start_of_year
      * @return {?}
      */
@@ -1553,8 +1552,7 @@ var CalendarHeatmap = /** @class */ (function () {
     ;
     /**
      * Helper function to calculate item position on the y-axis
-    \@param d object
-     * @param {?} d
+     * @param {?} d object
      * @return {?}
      */
     CalendarHeatmap.prototype.calcItemY = function (d) {
@@ -1563,10 +1561,8 @@ var CalendarHeatmap = /** @class */ (function () {
     ;
     /**
      * Helper function to calculate item size
-    \@param d object
-    \@param max number
-     * @param {?} d
-     * @param {?} max
+     * @param {?} d object
+     * @param {?} max number
      * @return {?}
      */
     CalendarHeatmap.prototype.calcItemSize = function (d, max) {
@@ -1801,7 +1797,7 @@ function CalendarHeatmap_tsickle_Closure_declarations() {
     CalendarHeatmap.prototype.overview;
     /**
      * Helper function to convert seconds to a human readable format
-    \@param seconds Integer
+     * \@param seconds Integer
      * @type {?}
      */
     CalendarHeatmap.prototype.formatTime;
