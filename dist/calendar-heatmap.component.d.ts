@@ -1,11 +1,74 @@
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, ElementRef } from '@angular/core';
+export declare type UnaryFunction<T, R> = (source: T) => R;
+export declare enum OverviewType {
+    global = 0,
+    year = 1,
+    month = 2,
+    week = 3,
+    day = 4,
+}
+export interface CalendarHeatmapItem {
+    date?: Date;
+}
+export interface CalendarHeatmapChangeEvent {
+    overview: OverviewType;
+    start: Date;
+    end: Date;
+}
+export interface CalendarHeatmapDataSummary {
+    name: string;
+    value: number;
+}
+export interface CalendarHeatmapDataDetail extends CalendarHeatmapItem {
+    name: string;
+    value: number;
+}
+export interface CalendarHeatmapData extends CalendarHeatmapItem {
+    details?: CalendarHeatmapDataDetail[];
+    summary?: CalendarHeatmapDataSummary[];
+    total?: number;
+}
 export declare class CalendarHeatmap {
-    element: any;
-    data: Array<object>;
+    element: ElementRef;
+    data: CalendarHeatmapData[];
     color: string;
-    overview: string;
+    overview: OverviewType;
+    /**
+    * Helper function to convert seconds to a human readable format
+    * @param seconds Integer
+    */
+    formatTime: UnaryFunction<number, string>;
+    /**
+    * Function for project label
+    */
+    projectLabel: UnaryFunction<string, string>;
+    /**
+    * Function for year label
+    */
+    yearLabel: UnaryFunction<Date, string>;
+    /**
+    * Function for month label
+    */
+    monthLabel: UnaryFunction<Date, string>;
+    /**
+    * Function for week label
+    */
+    weekLabel: UnaryFunction<number, string>;
+    /**
+    * Function for day of week label
+    */
+    dayOfWeekLabel: UnaryFunction<Date, string>;
+    /**
+    * Function for time label
+    */
+    timeLabel: UnaryFunction<Date, string>;
+    buildGlobalTooltip: UnaryFunction<CalendarHeatmapData, string>;
+    buildYearTooltip: UnaryFunction<CalendarHeatmapData, string>;
+    buildMonthTooltip: UnaryFunction<[CalendarHeatmapDataSummary, Date], string>;
+    buildWeekTooltip: UnaryFunction<[CalendarHeatmapDataSummary, Date], string>;
+    buildDayTooltip: UnaryFunction<CalendarHeatmapDataDetail, string>;
     handler: EventEmitter<object>;
-    onChange: EventEmitter<object>;
+    onChange: EventEmitter<CalendarHeatmapChangeEvent>;
     private gutter;
     private item_gutter;
     private width;
@@ -76,18 +139,18 @@ export declare class CalendarHeatmap {
      * Helper function to calculate item position on the x-axis
      * @param d object
      */
-    calcItemX(d: any, start_of_year: any): number;
+    calcItemX(d: CalendarHeatmapItem, start_of_year: any): number;
     /**
      * Helper function to calculate item position on the y-axis
      * @param d object
      */
-    calcItemY(d: any): number;
+    calcItemY(d: CalendarHeatmapItem): number;
     /**
      * Helper function to calculate item size
      * @param d object
      * @param max number
      */
-    calcItemSize(d: any, max: number): number;
+    calcItemSize(d: CalendarHeatmapData, max: number): number;
     /**
      * Draw the button for navigation purposes
      */
@@ -120,9 +183,4 @@ export declare class CalendarHeatmap {
      * Helper function to hide the back button
      */
     hideBackButton(): void;
-    /**
-     * Helper function to convert seconds to a human readable format
-     * @param seconds Integer
-     */
-    formatTime(seconds: number): string;
 }

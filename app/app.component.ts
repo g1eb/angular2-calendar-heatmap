@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { OverviewType } from 'angular2-calendar-heatmap';
 
 // Import dependencies
 import moment from 'moment';
@@ -49,7 +50,7 @@ export class AppComponent  {
   color = '#cd2327';
 
   // Set overview type (choices are year, month and day)
-  overview = 'year';
+  overview = OverviewType.year;
 
   // Click handler function
   print(val: object):void {
