@@ -248,7 +248,7 @@ var CalendarHeatmap = /** @class */ (function () {
      */
     CalendarHeatmap.prototype.updateDataSummary = function () {
         // Get daily summary if that was not provided
-        if (!this.data[0].summary) {
+        if (this.data[0] && !this.data[0].summary) {
             this.data.map(function (d) {
                 var /** @type {?} */ summary = d.details.reduce(function (uniques, project) {
                     if (!uniques[project.name]) {
