@@ -369,7 +369,7 @@ export class CalendarHeatmap {
    */
   updateDataSummary() {
     // Get daily summary if that was not provided
-    if (!this.data[0].summary) {
+    if (this.data[0] && !this.data[0].summary) {
       this.data.map((d) => {
         var summary = d.details.reduce((uniques: any, project: any) => {
           if (!uniques[project.name]) {
