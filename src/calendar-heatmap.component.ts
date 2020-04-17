@@ -4,7 +4,7 @@ import moment, { Moment } from 'moment';
 import * as d3 from 'd3';
 
 export declare type UnaryFunction<T, R> = (source: T) => R;
-export enum OverviewType { global,  year,  month,  week,  day };
+export enum OverviewType { global, year, month, week, day };
 export interface CalendarHeatmapItem {
   date?: Date;
 }
@@ -158,7 +158,8 @@ export class CalendarHeatmap {
   buildGlobalTooltip: UnaryFunction<CalendarHeatmapData, string> = (d: CalendarHeatmapData) => {
     // Construct tooltip
     var tooltip_html = '';
-    tooltip_html += '<div><span><strong>Total time tracked:</strong></span>';
+    const isDateFuture: boolean = moment(d.date) > moment();
+    tooltip_html += '<div><span><strong>Total time ' + isDateFuture ? 'planned' : 'tracked' + ':</strong></span>';
 
     var sec = d.total;
     var days = Math.floor(sec / 86400);
@@ -210,8 +211,9 @@ export class CalendarHeatmap {
   @Input()
   buildYearTooltip: UnaryFunction<CalendarHeatmapData, string> = (d: CalendarHeatmapData) => {
     // Construct tooltip
+    const isDateFuture: boolean = moment(d.date) > moment();
     var tooltip_html = '';
-    tooltip_html += '<div class="header"><strong>' + (d.total ? this.formatTime(d.total) : 'No time') + ' tracked</strong></div>';
+    tooltip_html += '<div class="header"><strong>' + (d.total ? this.formatTime(d.total) : 'No time') + isDateFuture ? 'planned' : 'tracked' + ' </strong></div>';
     tooltip_html += '<div>on ' + moment(d.date).format('dddd, MMM Do YYYY') + '</div><br>';
 
     // Add summary to the tooltip
@@ -226,9 +228,10 @@ export class CalendarHeatmap {
   @Input()
   buildMonthTooltip: UnaryFunction<[CalendarHeatmapDataSummary, Date], string> = (d: [CalendarHeatmapDataSummary, Date]) => {
     // Construct tooltip
+    const isDateFuture: boolean = moment(d[1]) > moment();
     var tooltip_html = '';
     tooltip_html += '<div class="header"><strong>' + d[0].name + '</strong></div><br>';
-    tooltip_html += '<div><strong>' + (d[0].value ? this.formatTime(d[0].value) : 'No time') + ' tracked</strong></div>';
+    tooltip_html += '<div><strong>' + (d[0].value ? this.formatTime(d[0].value) : 'No time') + isDateFuture ? 'planned' : 'tracked' + ' </strong></div>';
     tooltip_html += '<div>on ' + moment(d[1]).format('dddd, MMM Do YYYY') + '</div>';
 
     return tooltip_html;
@@ -237,9 +240,10 @@ export class CalendarHeatmap {
   @Input()
   buildWeekTooltip: UnaryFunction<[CalendarHeatmapDataSummary, Date], string> = (d: [CalendarHeatmapDataSummary, Date]) => {
     // Construct tooltip
+    const isDateFuture: boolean = moment(d[1]) > moment();
     var tooltip_html = '';
     tooltip_html += '<div class="header"><strong>' + d[0].name + '</strong></div><br>';
-    tooltip_html += '<div><strong>' + (d[0].value ? this.formatTime(d[0].value) : 'No time') + ' tracked</strong></div>';
+    tooltip_html += '<div><strong>' + (d[0].value ? this.formatTime(d[0].value) : 'No time') + isDateFuture ? 'planned' : 'tracked' + ' </strong></div>';
     tooltip_html += '<div>on ' + moment(d[1]).format('dddd, MMM Do YYYY') + '</div>';
 
     return tooltip_html;
@@ -248,9 +252,10 @@ export class CalendarHeatmap {
   @Input()
   buildDayTooltip: UnaryFunction<CalendarHeatmapDataDetail, string> = (d: CalendarHeatmapDataDetail) => {
     // Construct tooltip
+    const isDateFuture: boolean = moment(d.date) > moment();
     var tooltip_html = '';
     tooltip_html += '<div class="header"><strong>' + d.name + '</strong><div><br>';
-    tooltip_html += '<div><strong>' + (d.value ? this.formatTime(d.value) : 'No time') + ' tracked</strong></div>';
+    tooltip_html += '<div><strong>' + (d.value ? this.formatTime(d.value) : 'No time') + isDateFuture ? 'planned' : 'tracked' + ' </strong></div>';
     tooltip_html += '<div>on ' + moment(d.date).format('dddd, MMM Do YYYY HH:mm') + '</div>';
 
     return tooltip_html;
