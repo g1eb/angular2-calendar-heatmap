@@ -67,7 +67,8 @@ var CalendarHeatmap = /** @class */ (function () {
         this.buildGlobalTooltip = function (d) {
             // Construct tooltip
             var /** @type {?} */ tooltip_html = '';
-            tooltip_html += '<div><span><strong>Total time tracked:</strong></span>';
+            var /** @type {?} */ isDateFuture = moment(d.date) > moment();
+            tooltip_html += '<div><span><strong>Total time ' + isDateFuture ? 'planned' : 'tracked' + ':</strong></span>';
             var /** @type {?} */ sec = d.total;
             var /** @type {?} */ days = Math.floor(sec / 86400);
             if (days > 0) {
@@ -119,8 +120,9 @@ var CalendarHeatmap = /** @class */ (function () {
         };
         this.buildYearTooltip = function (d) {
             // Construct tooltip
+            var /** @type {?} */ isDateFuture = moment(d.date) > moment();
             var /** @type {?} */ tooltip_html = '';
-            tooltip_html += '<div class="header"><strong>' + (d.total ? _this.formatTime(d.total) : 'No time') + ' tracked</strong></div>';
+            tooltip_html += '<div class="header"><strong>' + (d.total ? _this.formatTime(d.total) : 'No time') + isDateFuture ? 'planned' : 'tracked' + ' </strong></div>';
             tooltip_html += '<div>on ' + moment(d.date).format('dddd, MMM Do YYYY') + '</div><br>';
             // Add summary to the tooltip
             d.summary.map(function (d) {
@@ -131,25 +133,28 @@ var CalendarHeatmap = /** @class */ (function () {
         };
         this.buildMonthTooltip = function (d) {
             // Construct tooltip
+            var /** @type {?} */ isDateFuture = moment(d[1]) > moment();
             var /** @type {?} */ tooltip_html = '';
             tooltip_html += '<div class="header"><strong>' + d[0].name + '</strong></div><br>';
-            tooltip_html += '<div><strong>' + (d[0].value ? _this.formatTime(d[0].value) : 'No time') + ' tracked</strong></div>';
+            tooltip_html += '<div><strong>' + (d[0].value ? _this.formatTime(d[0].value) : 'No time') + isDateFuture ? 'planned' : 'tracked' + ' </strong></div>';
             tooltip_html += '<div>on ' + moment(d[1]).format('dddd, MMM Do YYYY') + '</div>';
             return tooltip_html;
         };
         this.buildWeekTooltip = function (d) {
             // Construct tooltip
+            var /** @type {?} */ isDateFuture = moment(d[1]) > moment();
             var /** @type {?} */ tooltip_html = '';
             tooltip_html += '<div class="header"><strong>' + d[0].name + '</strong></div><br>';
-            tooltip_html += '<div><strong>' + (d[0].value ? _this.formatTime(d[0].value) : 'No time') + ' tracked</strong></div>';
+            tooltip_html += '<div><strong>' + (d[0].value ? _this.formatTime(d[0].value) : 'No time') + isDateFuture ? 'planned' : 'tracked' + ' </strong></div>';
             tooltip_html += '<div>on ' + moment(d[1]).format('dddd, MMM Do YYYY') + '</div>';
             return tooltip_html;
         };
         this.buildDayTooltip = function (d) {
             // Construct tooltip
+            var /** @type {?} */ isDateFuture = moment(d.date) > moment();
             var /** @type {?} */ tooltip_html = '';
             tooltip_html += '<div class="header"><strong>' + d.name + '</strong><div><br>';
-            tooltip_html += '<div><strong>' + (d.value ? _this.formatTime(d.value) : 'No time') + ' tracked</strong></div>';
+            tooltip_html += '<div><strong>' + (d.value ? _this.formatTime(d.value) : 'No time') + isDateFuture ? 'planned' : 'tracked' + ' </strong></div>';
             tooltip_html += '<div>on ' + moment(d.date).format('dddd, MMM Do YYYY HH:mm') + '</div>';
             return tooltip_html;
         };
