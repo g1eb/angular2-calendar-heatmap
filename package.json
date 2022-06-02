@@ -33,7 +33,7 @@
   "devDependencies": {
     "@angular/compiler": "^4.0.0",
     "@angular/compiler-cli": "^4.0.0",
-    "@angular/core": "^4.4.7",
+    "@angular/core": "^11.0.5",
     "@types/d3": "^4.11.0",
     "@types/node": "^6.0.60",
     "concurrently": "^3.4.0",
